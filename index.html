@@ -69,29 +69,32 @@ input,select,textarea{font-family:inherit;color:inherit;}
   overflow:hidden;
 }
 
-/* === ANIMATION 1: SPINNING VINYL === */
+/* === ANIMATION 1: TURNTABLE === */
 .np-anim-vinyl { position:relative;width:100%;height:100%; }
 .np-anim-vinyl .np-vinyl-art {
-  width:180px;height:180px;border-radius:8px;object-fit:cover;position:absolute;
-  top:50px;left:30px;z-index:2;
-  box-shadow:0 8px 32px rgba(0,0,0,.5);
+  width:220px;height:220px;border-radius:50%;object-fit:cover;position:absolute;
+  top:30px;left:50%;margin-left:-110px;z-index:1;
+  box-shadow:0 0 0 8px #2e2720, 0 0 0 10px #3a3530, 0 8px 32px rgba(0,0,0,.5);
+  -webkit-animation:spin 4s linear infinite;
+  animation:spin 4s linear infinite;
 }
-.np-anim-vinyl .np-vinyl-disc {
-  width:200px;height:200px;border-radius:50%;position:absolute;top:40px;right:20px;z-index:1;
-  background:radial-gradient(circle at 50% 50%, #1a1612 22%, #2a2520 23%, #1a1612 24%, #2a2520 25%, 
-    #1c1814 30%, #2a2520 35%, #1a1612 36%, #2a2520 37%, #1c1814 42%, 
-    #2a2520 50%, #1a1612 51%, #2a2520 52%, #1c1814 58%, #2a2520 65%, 
-    #1a1612 66%, #2a2520 67%, #1c1814 73%, #2a2520 80%, #1a1612 81%, 
-    #2a2520 82%, #1c1814 90%, #2e2720 100%);
-  box-shadow:0 4px 24px rgba(0,0,0,.4);
-  -webkit-animation:spin 3s linear infinite;
-  animation:spin 3s linear infinite;
+.np-anim-vinyl .np-tonearm {
+  position:absolute;top:18px;right:45px;z-index:3;
+  width:6px;height:100px;background:linear-gradient(to bottom, #999, #666);
+  border-radius:3px;transform-origin:top center;
+  -webkit-animation:tonearmBob 3s ease-in-out infinite;
+  animation:tonearmBob 3s ease-in-out infinite;
 }
-.np-anim-vinyl .np-vinyl-disc::after {
-  content:'';position:absolute;top:50%;left:50%;width:36px;height:36px;
-  border-radius:50%;transform:translate(-50%,-50%);
-  background:radial-gradient(circle, var(--amber-d) 30%, var(--bg) 32%);
+.np-anim-vinyl .np-tonearm::before {
+  content:'';position:absolute;top:-6px;left:50%;transform:translateX(-50%);
+  width:14px;height:14px;border-radius:50%;background:#999;border:2px solid #777;
 }
+.np-anim-vinyl .np-tonearm::after {
+  content:'';position:absolute;bottom:-4px;left:50%;transform:translateX(-50%) rotate(15deg);
+  width:10px;height:16px;background:#777;border-radius:2px;
+}
+@-webkit-keyframes tonearmBob { 0%,100%{transform:rotate(-20deg)} 50%{transform:rotate(-16deg)} }
+@keyframes tonearmBob { 0%,100%{transform:rotate(-20deg)} 50%{transform:rotate(-16deg)} }
 
 /* === ANIMATION 2: SOUND WAVES === */
 .np-anim-waves { position:relative;width:100%;height:100%; }
@@ -527,8 +530,7 @@ input,select,textarea{font-family:inherit;color:inherit;}
 /* ═══════════════════════════════════════ */
 @media(max-width:600px) {
   .np-anim-container { width:280px;height:260px; }
-  .np-anim-vinyl .np-vinyl-art { width:150px;height:150px;left:20px; }
-  .np-anim-vinyl .np-vinyl-disc { width:170px;height:170px; }
+  .np-anim-vinyl .np-vinyl-art { width:190px;height:190px;margin-left:-95px; }
   .np-anim-waves .np-vinyl-art { width:150px;height:150px; }
   .np-anim-glow .np-vinyl-art { width:180px;height:180px; }
   .np-anim-reggie .np-reggie-frames { width:100px;height:100px; }
@@ -1071,8 +1073,8 @@ function buildAnimHTML(animType, artUrl) {
   switch(animType) {
     case 'vinyl':
       html = `<div class="np-anim-vinyl">
-        <div class="np-vinyl-disc"></div>
         <img class="np-vinyl-art" src="${artUrl}" alt="" onerror="this.src='${PLACEHOLDER}'">
+        <div class="np-tonearm"></div>
       </div>`;
       break;
     case 'waves':
@@ -1112,7 +1114,7 @@ function buildAnimHTML(animType, artUrl) {
 
 function buildAnimPickerHTML(selected) {
   const anims = [
-    { id:'vinyl', label:'Spinning Vinyl', icon:'💿' },
+    { id:'vinyl', label:'Turntable', icon:'💿' },
     { id:'waves', label:'Sound Waves', icon:'🎛️' },
     { id:'glow', label:'Neon Glow', icon:'✨' },
     { id:'reggie', label:'DJ Reggie', icon:'<img src="reggie_f1.png" style="width:36px;height:36px;object-fit:contain;border-radius:4px;">' },
