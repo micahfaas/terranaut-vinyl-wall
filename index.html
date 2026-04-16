@@ -641,7 +641,7 @@ input,select,textarea{font-family:inherit;color:inherit;}
 
       <div class="form-group">
         <label class="form-label">DJ Name</label>
-        <select class="form-select" id="formDJ">
+        <select class="form-select" id="formDJ" onchange="handleDJChange()">
           <option value="">Select who's spinning...</option>
           <option>Micah</option>
           <option>Bryon</option>
@@ -651,7 +651,9 @@ input,select,textarea{font-family:inherit;color:inherit;}
           <option>Melissa</option>
           <option>Wiggles</option>
           <option>John</option>
+          <option value="__new__">+ Add new DJ...</option>
         </select>
+        <input type="text" class="custom-genre-input" id="formCustomDJ" placeholder="Enter DJ name...">
       </div>
 
       <div class="form-group">
@@ -1021,6 +1023,31 @@ function handleGenreChange() {
   const custom = document.getElementById('formCustomGenre');
   if (sel.value === '__custom__') { custom.style.display='block'; custom.focus(); }
   else { custom.style.display='none'; custom.value=''; }
+}
+
+function handleDJChange() {
+  const sel = document.getElementById('formDJ');
+  const custom = document.getElementById('formCustomDJ');
+  if (sel.value === '__new__') { custom.style.display='block'; custom.focus(); }
+  else { custom.style.display='none'; custom.value=''; }
+}
+
+function getSelectedDJ() {
+  const v = document.getElementById('formDJ').value;
+  if (v === '__new__') {
+    const name = document.getElementById('formCustomDJ').value.trim();
+    // Add the new DJ to the dropdown for future use this session
+    if (name) {
+      const sel = document.getElementById('formDJ');
+      const addOption = sel.querySelector('option[value="__new__"]');
+      const newOpt = document.createElement('option');
+      newOpt.value = name;
+      newOpt.textContent = name;
+      sel.insertBefore(newOpt, addOption);
+    }
+    return name;
+  }
+  return v;
 }
 
 function toggleFormAnimPicker() {
@@ -1491,6 +1518,8 @@ function openAddModal() {
   document.getElementById('artPicker').classList.remove('visible');
   document.getElementById('artPickerRow').innerHTML = '';
   document.getElementById('formDJ').value = '';
+  document.getElementById('formCustomDJ').value = '';
+  document.getElementById('formCustomDJ').style.display = 'none';
   document.getElementById('formArtist').value = '';
   document.getElementById('formAlbum').value = '';
   document.getElementById('formGenre').value = '';
@@ -1571,7 +1600,7 @@ function selectArt(url, el) {
 }
 
 async function submitAlbum() {
-  const dj = document.getElementById('formDJ').value;
+  const dj = getSelectedDJ();
   const artist = document.getElementById('formArtist').value.trim();
   const album = document.getElementById('formAlbum').value.trim();
   const genre = getSelectedGenre();
