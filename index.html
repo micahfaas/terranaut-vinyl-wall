@@ -34,6 +34,7 @@ input,select,textarea{font-family:inherit;color:inherit;}
 /*  ANIMATIONS                            */
 /* ═══════════════════════════════════════ */
 @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+@-webkit-keyframes spin { from{-webkit-transform:rotate(0deg)} to{-webkit-transform:rotate(360deg)} }
 @keyframes fadeIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
 @keyframes pulse { 0%,100%{opacity:.6} 50%{opacity:1} }
 @keyframes slideUp { from{opacity:0;transform:translateY(40px)} to{opacity:1;transform:translateY(0)} }
@@ -138,17 +139,17 @@ input,select,textarea{font-family:inherit;color:inherit;}
 /* === ANIMATION 4: DJ REGGIE === */
 .np-anim-reggie { position:relative;width:100%;height:100%; }
 .np-anim-reggie .np-vinyl-art {
-  width:130px;height:130px;border-radius:8px;object-fit:cover;position:absolute;
-  top:8px;right:10px;z-index:1;
-  box-shadow:0 4px 16px rgba(0,0,0,.4);
+  width:220px;height:220px;border-radius:10px;object-fit:cover;position:absolute;
+  top:10px;left:50%;transform:translateX(-50%);z-index:1;
+  box-shadow:0 8px 32px rgba(0,0,0,.5);
 }
 .np-anim-reggie .np-reggie-frames {
-  position:absolute;bottom:0;left:50%;transform:translateX(-50%);z-index:2;
-  width:220px;height:220px;
+  position:absolute;bottom:-10px;right:-5px;z-index:2;
+  width:120px;height:120px;
 }
 .np-reggie-frame {
   position:absolute;inset:0;width:100%;height:100%;object-fit:contain;
-  opacity:0;transition:none;
+  opacity:0;transition:none;filter:drop-shadow(0 4px 12px rgba(0,0,0,.5));
 }
 .np-reggie-frame.active { opacity:1; }
 
@@ -530,8 +531,8 @@ input,select,textarea{font-family:inherit;color:inherit;}
   .np-anim-vinyl .np-vinyl-disc { width:170px;height:170px; }
   .np-anim-waves .np-vinyl-art { width:150px;height:150px; }
   .np-anim-glow .np-vinyl-art { width:180px;height:180px; }
-  .np-anim-reggie .np-reggie-frames { width:180px;height:180px; }
-  .np-anim-reggie .np-vinyl-art { width:100px;height:100px; }
+  .np-anim-reggie .np-reggie-frames { width:100px;height:100px; }
+  .np-anim-reggie .np-vinyl-art { width:190px;height:190px; }
   .np-artist { font-size:26px; }
   .header h1 { font-size:32px; }
   .grid { grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;padding:14px; }
@@ -1114,12 +1115,12 @@ function buildAnimPickerHTML(selected) {
     { id:'vinyl', label:'Spinning Vinyl', icon:'💿' },
     { id:'waves', label:'Sound Waves', icon:'🎛️' },
     { id:'glow', label:'Neon Glow', icon:'✨' },
-    { id:'reggie', label:'DJ Reggie', icon:'🐕' },
+    { id:'reggie', label:'DJ Reggie', icon:'<img src="reggie_f1.png" style="width:36px;height:36px;object-fit:contain;border-radius:4px;">' },
   ];
   return `<div class="form-label" style="margin-bottom:4px;">Now Playing Animation</div>
     <div class="anim-picker">${anims.map(a =>
       `<div class="anim-picker-option ${selected===a.id?'selected':''}" onclick="selectAnim('${a.id}')">
-        <div class="anim-icon" style="font-size:24px;line-height:36px;">${a.icon}</div>
+        <div class="anim-icon" style="font-size:24px;line-height:36px;text-align:center;">${a.icon}</div>
         <div class="anim-picker-label">${a.label}</div>
       </div>`
     ).join('')}</div>`;
