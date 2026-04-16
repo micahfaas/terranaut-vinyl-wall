@@ -62,30 +62,96 @@ input,select,textarea{font-family:inherit;color:inherit;}
 .np-dot { width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite; }
 .np-idle-dot { background:var(--wg);animation:none; }
 
-.np-vinyl-container {
-  position:relative;width:320px;height:280px;margin:0 auto 40px;animation:slideUp .8s ease;
+/* Animation container */
+.np-anim-container {
+  position:relative;width:320px;height:320px;margin:0 auto 32px;animation:slideUp .8s ease;
 }
-.np-album-art {
+
+/* === ANIMATION 1: SPINNING VINYL === */
+.np-anim-vinyl .np-vinyl-art {
   width:200px;height:200px;border-radius:8px;object-fit:cover;position:absolute;
-  top:40px;left:50%;transform:translateX(-50%);z-index:2;
+  top:50%;left:40%;transform:translate(-50%,-50%);z-index:2;
   box-shadow:0 8px 32px rgba(0,0,0,.5);
 }
-.np-vinyl-disc {
-  width:200px;height:200px;border-radius:50%;position:absolute;top:40px;left:50%;
-  transform:translateX(-2%);z-index:1;
+.np-anim-vinyl .np-vinyl-disc {
+  width:240px;height:240px;border-radius:50%;position:absolute;top:50%;left:55%;
+  transform:translate(-50%,-50%);z-index:1;
   background:radial-gradient(circle at 50% 50%, #1a1612 22%, #2a2520 23%, #1a1612 24%, #2a2520 25%, 
     #1c1814 30%, #2a2520 35%, #1a1612 36%, #2a2520 37%, #1c1814 42%, 
     #2a2520 50%, #1a1612 51%, #2a2520 52%, #1c1814 58%, #2a2520 65%, 
     #1a1612 66%, #2a2520 67%, #1c1814 73%, #2a2520 80%, #1a1612 81%, 
     #2a2520 82%, #1c1814 90%, #2e2720 100%);
   box-shadow:0 4px 24px rgba(0,0,0,.4);
+  animation:spin 3s linear infinite;
 }
-.np-vinyl-disc::after {
-  content:'';position:absolute;top:50%;left:50%;width:40px;height:40px;
+.np-anim-vinyl .np-vinyl-disc::after {
+  content:'';position:absolute;top:50%;left:50%;width:36px;height:36px;
   border-radius:50%;transform:translate(-50%,-50%);
   background:radial-gradient(circle, var(--amber-d) 30%, var(--bg) 32%);
 }
-.np-spinning .np-vinyl-disc { animation:spin 3s linear infinite; }
+
+/* === ANIMATION 2: SOUND WAVES === */
+.np-anim-waves .np-vinyl-art {
+  width:180px;height:180px;border-radius:50%;object-fit:cover;position:absolute;
+  top:45%;left:50%;transform:translate(-50%,-50%);z-index:2;
+  box-shadow:0 0 0 4px var(--fg), 0 8px 32px rgba(0,0,0,.5);
+}
+.np-anim-waves .np-eq-bars {
+  position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+  display:flex;gap:4px;align-items:flex-end;height:80px;z-index:1;
+}
+.np-anim-waves .np-eq-bar {
+  width:6px;border-radius:3px;background:var(--amber);opacity:.7;
+}
+@keyframes eqBounce1 { 0%,100%{height:15px} 50%{height:65px} }
+@keyframes eqBounce2 { 0%,100%{height:40px} 50%{height:20px} }
+@keyframes eqBounce3 { 0%,100%{height:25px} 50%{height:55px} }
+@keyframes eqBounce4 { 0%,100%{height:50px} 50%{height:30px} }
+@keyframes eqBounce5 { 0%,100%{height:20px} 50%{height:70px} }
+
+/* === ANIMATION 3: NEON GLOW === */
+.np-anim-glow .np-vinyl-art {
+  width:220px;height:220px;border-radius:12px;object-fit:cover;position:absolute;
+  top:45%;left:50%;transform:translate(-50%,-50%);z-index:2;
+  box-shadow:0 0 40px #d4883a30, 0 0 80px #d4883a15;
+  animation:neonPulse 2.5s ease-in-out infinite;
+}
+@keyframes neonPulse {
+  0%,100%{box-shadow:0 0 40px #d4883a30, 0 0 80px #d4883a15;transform:translate(-50%,-50%) scale(1);}
+  50%{box-shadow:0 0 60px #d4883a50, 0 0 120px #d4883a25, 0 0 200px #d4883a10;transform:translate(-50%,-50%) scale(1.02);}
+}
+.np-anim-glow .np-glow-ring {
+  position:absolute;top:45%;left:50%;transform:translate(-50%,-50%);
+  width:280px;height:280px;border-radius:16px;z-index:1;
+  border:2px solid #d4883a20;
+  animation:glowRingPulse 2.5s ease-in-out infinite;
+}
+@keyframes glowRingPulse {
+  0%,100%{opacity:.3;transform:translate(-50%,-50%) scale(1);}
+  50%{opacity:.7;transform:translate(-50%,-50%) scale(1.05);}
+}
+
+/* === ANIMATION 4: DJ REGGIE === */
+.np-anim-reggie .np-vinyl-art {
+  width:160px;height:160px;border-radius:8px;object-fit:cover;position:absolute;
+  top:8px;right:8px;z-index:1;
+  box-shadow:0 4px 16px rgba(0,0,0,.4);
+}
+.np-anim-reggie .np-reggie-svg {
+  position:absolute;top:50%;left:45%;transform:translate(-50%,-50%);z-index:2;
+  width:220px;height:220px;
+}
+
+/* Animation picker (in modals) */
+.anim-picker { display:flex;gap:10px;flex-wrap:wrap;margin-top:8px; }
+.anim-picker-option {
+  width:72px;padding:8px 4px;border-radius:8px;border:2px solid var(--fg);
+  cursor:pointer;text-align:center;transition:all .2s;background:var(--bg);
+}
+.anim-picker-option:hover { border-color:var(--mg); }
+.anim-picker-option.selected { border-color:var(--amber);background:var(--fg); }
+.anim-picker-option svg,.anim-picker-option .anim-icon { width:36px;height:36px;margin:0 auto 4px;display:block; }
+.anim-picker-label { font-size:9px;color:var(--cream-d);line-height:1.2; }
 
 .np-info { animation:slideUp 1s ease .2s both; }
 .np-artist { font-family:'Playfair Display',serif;font-size:32px;font-weight:900;font-style:italic;margin-bottom:4px;color:var(--cream); }
@@ -301,28 +367,47 @@ input,select,textarea{font-family:inherit;color:inherit;}
 .art-picker.visible { display:block; }
 .art-picker-row { display:flex;gap:10px;flex-wrap:wrap;margin-top:8px; }
 .art-picker-option {
-  width:90px;border-radius:8px;overflow:hidden;cursor:pointer;
+  width:80px;height:80px;border-radius:8px;overflow:hidden;cursor:pointer;
   border:3px solid transparent;transition:all .2s;position:relative;flex-shrink:0;
 }
-.art-picker-option:hover { border-color:var(--amber-d);transform:scale(1.02); }
+.art-picker-option:hover { border-color:var(--amber-d);transform:scale(1.05); }
 .art-picker-option.selected { border-color:var(--amber);box-shadow:0 0 12px #d4883a40; }
 .art-picker-option.selected::after {
-  content:'✓';position:absolute;top:4px;right:4px;width:20px;height:20px;
+  content:'✓';position:absolute;bottom:4px;right:4px;width:20px;height:20px;
   background:var(--amber);color:var(--bg);border-radius:50%;font-size:11px;font-weight:900;
-  display:flex;align-items:center;justify-content:center;z-index:2;
+  display:flex;align-items:center;justify-content:center;
 }
-.art-picker-option img { width:90px;height:90px;object-fit:cover;display:block; }
-.art-picker-option-label {
-  font-size:9px;color:var(--cream-d);padding:4px 5px;line-height:1.2;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:var(--bg2);
-}
+.art-picker-option img { width:100%;height:100%;object-fit:cover; }
 .art-picker-none {
-  width:90px;min-height:90px;border-radius:8px;cursor:pointer;
+  width:80px;height:80px;border-radius:8px;cursor:pointer;
   border:3px dashed var(--mg);display:flex;align-items:center;justify-content:center;
   font-size:10px;color:var(--wg);text-align:center;padding:4px;transition:all .2s;
 }
 .art-picker-none:hover { border-color:var(--cream-d); }
 .art-picker-none.selected { border-color:var(--amber);border-style:solid; }
+
+/* Autocomplete dropdown */
+.autocomplete-wrap { position:relative; }
+.autocomplete-list {
+  position:absolute;top:100%;left:0;right:0;z-index:10;max-height:180px;overflow-y:auto;
+  background:var(--bg2);border:1px solid var(--mg);border-top:none;border-radius:0 0 8px 8px;
+  display:none;
+}
+.autocomplete-list.open { display:block; }
+.autocomplete-item {
+  padding:8px 14px;font-size:13px;color:var(--cream-d);cursor:pointer;transition:background .1s;
+}
+.autocomplete-item:hover { background:var(--fg);color:var(--cream); }
+.autocomplete-item small { color:var(--wg);font-size:11px;margin-left:6px; }
+
+/* Custom genre input */
+.custom-genre-input {
+  width:100%;padding:10px 14px;border-radius:8px;border:1px solid var(--fg);
+  background:var(--bg);color:var(--cream);font-size:14px;outline:none;transition:border-color .2s;
+  margin-top:6px;display:none;
+}
+.custom-genre-input:focus { border-color:var(--amber-d); }
+.custom-genre-input::placeholder { color:var(--wg); }
 
 .detail-btn-delete { background:transparent;color:var(--red);border:1px solid var(--red); }
 .detail-btn-delete:hover { background:var(--red);color:#fff; }
@@ -377,7 +462,7 @@ input,select,textarea{font-family:inherit;color:inherit;}
 .detail-meta { display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--wg); }
 .detail-meta strong { color:var(--cream-d);font-weight:600; }
 .detail-meta .dj-name { color:var(--amber);font-weight:700; }
-.detail-actions { display:flex;gap:8px;margin-top:16px; }
+.detail-actions { display:flex;gap:8px;margin-top:16px;flex-wrap:wrap; }
 .detail-btn {
   padding:8px 16px;border-radius:6px;font-size:12px;font-weight:600;
   background:var(--fg);color:var(--cream-d);transition:all .2s;
@@ -430,9 +515,13 @@ input,select,textarea{font-family:inherit;color:inherit;}
 /*  RESPONSIVE                            */
 /* ═══════════════════════════════════════ */
 @media(max-width:600px) {
-  .np-vinyl-container { width:260px;height:240px; }
-  .np-album-art { width:160px;height:160px; }
-  .np-vinyl-disc { width:160px;height:160px; }
+  .np-anim-container { width:280px;height:280px; }
+  .np-anim-vinyl .np-vinyl-art { width:160px;height:160px; }
+  .np-anim-vinyl .np-vinyl-disc { width:200px;height:200px; }
+  .np-anim-waves .np-vinyl-art { width:150px;height:150px; }
+  .np-anim-glow .np-vinyl-art { width:180px;height:180px; }
+  .np-anim-reggie .np-reggie-svg { width:180px;height:180px; }
+  .np-anim-reggie .np-vinyl-art { width:120px;height:120px; }
   .np-artist { font-size:26px; }
   .header h1 { font-size:32px; }
   .grid { grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;padding:14px; }
@@ -451,10 +540,7 @@ input,select,textarea{font-family:inherit;color:inherit;}
     <span id="npBadgeText">Vinyl Night — Wednesdays</span>
   </div>
 
-  <div class="np-vinyl-container" id="npVinylContainer">
-    <div class="np-vinyl-disc" id="npDisc"></div>
-    <img class="np-album-art" id="npArt" src="" alt="">
-  </div>
+  <div class="np-anim-container" id="npAnimContainer" style="display:none;"></div>
 
   <div class="np-info" id="npInfo">
     <div class="np-artist" id="npArtist"></div>
@@ -556,18 +642,24 @@ input,select,textarea{font-family:inherit;color:inherit;}
 
       <div class="form-group">
         <label class="form-label">Artist</label>
-        <input type="text" class="form-input" id="formArtist" placeholder="e.g. Fleetwood Mac">
+        <div class="autocomplete-wrap">
+          <input type="text" class="form-input" id="formArtist" placeholder="e.g. Fleetwood Mac" autocomplete="off">
+          <div class="autocomplete-list" id="artistSuggestions"></div>
+        </div>
       </div>
 
       <div class="form-group">
         <label class="form-label">Album</label>
-        <input type="text" class="form-input" id="formAlbum" placeholder="e.g. Rumours">
+        <div class="autocomplete-wrap">
+          <input type="text" class="form-input" id="formAlbum" placeholder="e.g. Rumours" autocomplete="off">
+          <div class="autocomplete-list" id="albumSuggestions"></div>
+        </div>
       </div>
 
       <div class="form-row">
         <div class="form-group">
           <label class="form-label">Genre</label>
-          <select class="form-select" id="formGenre">
+          <select class="form-select" id="formGenre" onchange="handleGenreChange()">
             <option value="">Select genre...</option>
             <option>Rock</option>
             <option>Classic Rock</option>
@@ -589,8 +681,9 @@ input,select,textarea{font-family:inherit;color:inherit;}
             <option>Reggae</option>
             <option>World</option>
             <option>Soundtrack</option>
-            <option>Other</option>
+            <option value="__custom__">Custom...</option>
           </select>
+          <input type="text" class="custom-genre-input" id="formCustomGenre" placeholder="Type your genre...">
         </div>
         <div class="form-group">
           <label class="form-label">Date Played</label>
@@ -599,9 +692,10 @@ input,select,textarea{font-family:inherit;color:inherit;}
       </div>
 
       <label class="form-checkbox">
-        <input type="checkbox" id="formSetPlaying">
+        <input type="checkbox" id="formSetPlaying" onchange="toggleFormAnimPicker()">
         <span>Set as Now Playing</span>
       </label>
+      <div id="formAnimPicker" style="display:none;margin-bottom:16px;"></div>
 
       <div class="form-actions">
         <button class="btn-secondary" onclick="closeAddModal()">Cancel</button>
@@ -730,6 +824,7 @@ async function init() {
   renderNowPlaying();
   renderWall();
   setupSearch();
+  setupAutocomplete();
 }
 
 function loadSampleData() {
@@ -739,52 +834,184 @@ function loadSampleData() {
 }
 
 // ═══════════════════════════════════════
-//  ITUNES ART FETCHER
+//  MUSICBRAINZ + COVER ART ARCHIVE + ITUNES
 // ═══════════════════════════════════════
+const MB_BASE = 'https://musicbrainz.org/ws/2';
+const CAA_BASE = 'https://coverartarchive.org';
+let lastMBReq = 0;
+async function mbFetch(url) {
+  const wait = Math.max(0, 1100 - (Date.now() - lastMBReq));
+  if (wait > 0) await new Promise(r => setTimeout(r, wait));
+  lastMBReq = Date.now();
+  const res = await fetch(url, { headers: { 'Accept':'application/json' } });
+  if (!res.ok) throw new Error(res.status);
+  return res.json();
+}
+
 async function fetchArt(artist, album) {
   const key = `${artist}|||${album}`;
   if (artCache[key]) return artCache[key];
-  const options = await fetchArtOptions(artist, album);
-  if (options.length > 0) {
-    artCache[key] = options[0].url;
-    return options[0].url;
-  }
-  artCache[key] = PLACEHOLDER;
-  return PLACEHOLDER;
+  // Try MusicBrainz + Cover Art Archive
+  try {
+    const q = encodeURIComponent(`release:"${album}" AND artist:"${artist}"`);
+    const data = await mbFetch(`${MB_BASE}/release/?query=${q}&limit=3&fmt=json`);
+    if (data.releases) {
+      for (const rel of data.releases) {
+        try {
+          const caaRes = await fetch(`${CAA_BASE}/release/${rel.id}`);
+          if (caaRes.ok) {
+            const caa = await caaRes.json();
+            const front = caa.images.find(img => img.front);
+            if (front) {
+              const url = (front.thumbnails?.['500']||front.thumbnails?.large||front.image).replace('http://','https://');
+              artCache[key] = url; return url;
+            }
+          }
+        } catch(e) {}
+      }
+    }
+  } catch(e) {}
+  // Fallback: iTunes
+  try {
+    const q = encodeURIComponent(`${artist} ${album}`);
+    const res = await fetch(`https://itunes.apple.com/search?term=${q}&media=music&entity=album&limit=5`);
+    const data = await res.json();
+    if (data.results?.length > 0) {
+      const al = artist.toLowerCase();
+      const m = data.results.find(r => r.artistName.toLowerCase().includes(al)) || data.results[0];
+      const url = m.artworkUrl100.replace('100x100','600x600').replace('http://','https://');
+      artCache[key] = url; return url;
+    }
+  } catch(e) {}
+  artCache[key] = PLACEHOLDER; return PLACEHOLDER;
 }
 
 async function fetchArtOptions(artist, album) {
+  const results = []; const seen = new Set();
+  // MusicBrainz covers
+  try {
+    const q = encodeURIComponent(`release:"${album}" AND artist:"${artist}"`);
+    const data = await mbFetch(`${MB_BASE}/release/?query=${q}&limit=8&fmt=json`);
+    if (data.releases) {
+      for (const rel of data.releases.slice(0,6)) {
+        try {
+          const caaRes = await fetch(`${CAA_BASE}/release/${rel.id}`);
+          if (caaRes.ok) {
+            const caa = await caaRes.json();
+            const front = caa.images.find(img => img.front);
+            if (front) {
+              const url = (front.thumbnails?.['500']||front.thumbnails?.large||front.image).replace('http://','https://');
+              const thumb = (front.thumbnails?.['250']||front.thumbnails?.small||url).replace('http://','https://');
+              const credit = rel['artist-credit']?.map(a=>a.name||a.artist?.name).join('')||artist;
+              const label = `${credit} — ${rel.title}`;
+              if (!seen.has(label.toLowerCase())) { seen.add(label.toLowerCase()); results.push({url,thumb,label}); }
+            }
+          }
+        } catch(e) {}
+        if (results.length >= 4) break;
+      }
+    }
+  } catch(e) {}
+  // iTunes extras
   try {
     const q = encodeURIComponent(`${artist} ${album}`);
-    const res = await fetch(`https://itunes.apple.com/search?term=${q}&media=music&entity=album&limit=15`);
+    const res = await fetch(`https://itunes.apple.com/search?term=${q}&media=music&entity=album&limit=10`);
     const data = await res.json();
-    if (data.results && data.results.length > 0) {
-      const artistLower = artist.toLowerCase();
-      // Score results: exact artist match first, then partial, then others
+    if (data.results) {
+      const al = artist.toLowerCase();
       const scored = data.results.map(r => {
-        const rArtist = r.artistName.toLowerCase();
-        let score = 0;
-        if (rArtist === artistLower) score = 100;
-        else if (rArtist.includes(artistLower) || artistLower.includes(rArtist)) score = 50;
-        return { ...r, score };
-      });
-      // Sort by score descending, then deduplicate by collection name
-      scored.sort((a, b) => b.score - a.score);
-      const seen = new Set();
-      const unique = scored.filter(r => {
-        const key = `${r.artistName}|||${r.collectionName}`.toLowerCase();
-        if (seen.has(key)) return false;
-        seen.add(key);
-        return true;
-      });
-      return unique.slice(0, 6).map(r => ({
-        url: r.artworkUrl100.replace('100x100', '600x600').replace('http://', 'https://'),
-        thumb: r.artworkUrl100.replace('http://', 'https://'),
-        label: `${r.artistName} — ${r.collectionName}`,
-      }));
+        const ra = r.artistName.toLowerCase();
+        return {...r, score: ra===al?100:ra.includes(al)||al.includes(ra)?50:0};
+      }).sort((a,b)=>b.score-a.score);
+      for (const r of scored) {
+        const label = `${r.artistName} — ${r.collectionName}`;
+        if (seen.has(label.toLowerCase())) continue; seen.add(label.toLowerCase());
+        results.push({url:r.artworkUrl100.replace('100x100','600x600').replace('http://','https://'),thumb:r.artworkUrl100.replace('http://','https://'),label});
+        if (results.length >= 8) break;
+      }
     }
-  } catch(e) { console.warn('Art fetch failed:', artist, album); }
-  return [];
+  } catch(e) {}
+  return results;
+}
+
+// ═══════════════════════════════════════
+//  ARTIST / ALBUM AUTOCOMPLETE
+// ═══════════════════════════════════════
+let artistMBID = null;
+function setupAutocomplete() {
+  const ai = document.getElementById('formArtist');
+  const ali = document.getElementById('formAlbum');
+  const aList = document.getElementById('artistSuggestions');
+  const alList = document.getElementById('albumSuggestions');
+  let acD = null;
+  ai.addEventListener('input', () => {
+    artistMBID = null; clearTimeout(acD);
+    acD = setTimeout(async () => {
+      const q = ai.value.trim();
+      if (q.length < 2) { aList.classList.remove('open'); return; }
+      try {
+        const data = await mbFetch(`${MB_BASE}/artist/?query=${encodeURIComponent(q)}&limit=6&fmt=json`);
+        if (data.artists?.length > 0) {
+          aList.innerHTML = data.artists.map(a =>
+            `<div class="autocomplete-item" data-id="${a.id}" data-name="${a.name.replace(/"/g,'&quot;')}">${a.name}${a.disambiguation?'<small>('+a.disambiguation+')</small>':''}</div>`
+          ).join('');
+          aList.classList.add('open');
+          aList.querySelectorAll('.autocomplete-item').forEach(el => {
+            el.onclick = () => { ai.value=el.dataset.name; artistMBID=el.dataset.id; aList.classList.remove('open'); ali.focus(); };
+          });
+        } else { aList.classList.remove('open'); }
+      } catch(e) { aList.classList.remove('open'); }
+    }, 400);
+  });
+  ali.addEventListener('input', () => {
+    clearTimeout(acD);
+    acD = setTimeout(async () => {
+      const q = ali.value.trim();
+      if (q.length < 2) { alList.classList.remove('open'); return; }
+      try {
+        let query;
+        if (artistMBID) { query = `release-group:"${q}" AND arid:${artistMBID}`; }
+        else { const an=ai.value.trim(); query = an ? `release-group:"${q}" AND artist:"${an}"` : `release-group:"${q}"`; }
+        const data = await mbFetch(`${MB_BASE}/release-group/?query=${encodeURIComponent(query)}&limit=6&fmt=json`);
+        if (data['release-groups']?.length > 0) {
+          alList.innerHTML = data['release-groups'].map(rg => {
+            const c = rg['artist-credit']?.map(a=>a.name||a.artist?.name).join('')||'';
+            return `<div class="autocomplete-item" data-name="${rg.title.replace(/"/g,'&quot;')}">${rg.title}${c?'<small>'+c+'</small>':''}</div>`;
+          }).join('');
+          alList.classList.add('open');
+          alList.querySelectorAll('.autocomplete-item').forEach(el => {
+            el.onclick = () => { ali.value=el.dataset.name; alList.classList.remove('open'); };
+          });
+        } else { alList.classList.remove('open'); }
+      } catch(e) { alList.classList.remove('open'); }
+    }, 400);
+  });
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.autocomplete-wrap')) { aList.classList.remove('open'); alList.classList.remove('open'); }
+  });
+}
+
+// Custom genre handler
+function handleGenreChange() {
+  const sel = document.getElementById('formGenre');
+  const custom = document.getElementById('formCustomGenre');
+  if (sel.value === '__custom__') { custom.style.display='block'; custom.focus(); }
+  else { custom.style.display='none'; custom.value=''; }
+}
+
+function toggleFormAnimPicker() {
+  const picker = document.getElementById('formAnimPicker');
+  const checked = document.getElementById('formSetPlaying').checked;
+  if (checked) {
+    picker.innerHTML = buildAnimPickerHTML(currentAnim);
+    picker.style.display = 'block';
+  } else {
+    picker.style.display = 'none';
+  }
+}
+function getSelectedGenre() {
+  const v = document.getElementById('formGenre').value;
+  return v === '__custom__' ? document.getElementById('formCustomGenre').value.trim() : v;
 }
 
 async function fetchAllArt() {
@@ -805,13 +1032,138 @@ function getArt(artist, album) {
 }
 
 // ═══════════════════════════════════════
-//  NOW PLAYING
+//  NOW PLAYING + ANIMATIONS
 // ═══════════════════════════════════════
+let currentAnim = localStorage.getItem('npAnim') || 'vinyl';
+
+const REGGIE_SVG = `<svg viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg" class="np-reggie-svg">
+  <style>
+    @keyframes headBob{0%,100%{transform:rotate(-2deg) translateY(0)}25%{transform:rotate(3deg) translateY(-4px)}50%{transform:rotate(-1deg) translateY(-2px)}75%{transform:rotate(4deg) translateY(-6px)}}
+    @keyframes earFlop{0%,100%{transform:rotate(0deg)}30%{transform:rotate(5deg)}70%{transform:rotate(-3deg)}}
+    @keyframes tongueBob{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.15)}}
+    .reggie-head{animation:headBob .8s ease-in-out infinite;transform-origin:110px 130px}
+    .reggie-ear-l{animation:earFlop .8s ease-in-out infinite;transform-origin:62px 85px}
+    .reggie-ear-r{animation:earFlop .8s ease-in-out .1s infinite;transform-origin:158px 85px}
+    .reggie-tongue{animation:tongueBob .8s ease-in-out infinite;transform-origin:110px 155px}
+  </style>
+  <g class="reggie-head">
+    <!-- Body -->
+    <ellipse cx="110" cy="195" rx="65" ry="35" fill="#c8952e"/>
+    <ellipse cx="110" cy="195" rx="55" ry="28" fill="#d4a43a"/>
+    <!-- Neck -->
+    <rect x="80" y="145" width="60" height="55" rx="20" fill="#d4a43a"/>
+    <!-- Head -->
+    <ellipse cx="110" cy="100" rx="52" ry="55" fill="#d4a43a"/>
+    <!-- Face lighter area -->
+    <ellipse cx="110" cy="108" rx="36" ry="40" fill="#e0b84a"/>
+    <!-- Snout -->
+    <ellipse cx="110" cy="125" rx="22" ry="16" fill="#e8c86a"/>
+    <!-- Nose -->
+    <ellipse cx="110" cy="118" rx="10" ry="7" fill="#2a1f14"/>
+    <ellipse cx="110" cy="117" rx="7" ry="4" fill="#3a2f24" opacity=".5"/>
+    <!-- Mouth -->
+    <path d="M100 126 Q110 133 120 126" fill="none" stroke="#8b6914" stroke-width="1.5"/>
+    <!-- Tongue -->
+    <g class="reggie-tongue">
+      <ellipse cx="112" cy="133" rx="6" ry="9" fill="#d47070"/>
+      <ellipse cx="112" cy="131" rx="4" ry="5" fill="#e08080"/>
+    </g>
+    <!-- Eyes -->
+    <ellipse cx="94" cy="96" rx="7" ry="8" fill="#fff"/>
+    <ellipse cx="126" cy="96" rx="7" ry="8" fill="#fff"/>
+    <ellipse cx="95" cy="97" rx="4.5" ry="5" fill="#3a2510"/>
+    <ellipse cx="127" cy="97" rx="4.5" ry="5" fill="#3a2510"/>
+    <circle cx="96" cy="95" r="1.5" fill="#fff"/>
+    <circle cx="128" cy="95" r="1.5" fill="#fff"/>
+    <!-- Eyebrows -->
+    <path d="M84 88 Q90 83 100 86" fill="none" stroke="#b8872a" stroke-width="2" stroke-linecap="round"/>
+    <path d="M136 88 Q130 83 120 86" fill="none" stroke="#b8872a" stroke-width="2" stroke-linecap="round"/>
+    <!-- Ears -->
+    <g class="reggie-ear-l">
+      <ellipse cx="62" cy="90" rx="18" ry="32" fill="#c8952e" transform="rotate(-15 62 90)"/>
+      <ellipse cx="64" cy="92" rx="12" ry="24" fill="#d4a43a" transform="rotate(-15 64 92)"/>
+    </g>
+    <g class="reggie-ear-r">
+      <ellipse cx="158" cy="90" rx="18" ry="32" fill="#c8952e" transform="rotate(15 158 90)"/>
+      <ellipse cx="156" cy="92" rx="12" ry="24" fill="#d4a43a" transform="rotate(15 156 92)"/>
+    </g>
+    <!-- Headphones band -->
+    <path d="M58 82 Q60 30 110 25 Q160 30 162 82" fill="none" stroke="#333" stroke-width="8" stroke-linecap="round"/>
+    <path d="M58 82 Q60 34 110 29 Q160 34 162 82" fill="none" stroke="#444" stroke-width="5" stroke-linecap="round"/>
+    <!-- Headphone pads -->
+    <rect x="42" y="72" width="24" height="32" rx="10" fill="#333"/>
+    <rect x="44" y="75" width="20" height="26" rx="8" fill="#222"/>
+    <rect x="46" y="80" width="16" height="16" rx="6" fill="#d4883a" opacity=".8"/>
+    <rect x="154" y="72" width="24" height="32" rx="10" fill="#333"/>
+    <rect x="156" y="75" width="20" height="26" rx="8" fill="#222"/>
+    <rect x="158" y="80" width="16" height="16" rx="6" fill="#d4883a" opacity=".8"/>
+  </g>
+</svg>`;
+
+function buildAnimHTML(animType, artUrl) {
+  switch(animType) {
+    case 'vinyl':
+      return `<div class="np-anim-vinyl">
+        <div class="np-vinyl-disc"></div>
+        <img class="np-vinyl-art" src="${artUrl}" alt="" onerror="this.src='${PLACEHOLDER}'">
+      </div>`;
+    case 'waves':
+      const bars = Array.from({length:18}, (_, i) => {
+        const anim = `eqBounce${(i%5)+1}`;
+        const dur = (0.6 + Math.random()*0.6).toFixed(2);
+        const delay = (Math.random()*0.5).toFixed(2);
+        return `<div class="np-eq-bar" style="animation:${anim} ${dur}s ease-in-out ${delay}s infinite;"></div>`;
+      }).join('');
+      return `<div class="np-anim-waves">
+        <img class="np-vinyl-art" src="${artUrl}" alt="" onerror="this.src='${PLACEHOLDER}'">
+        <div class="np-eq-bars">${bars}</div>
+      </div>`;
+    case 'glow':
+      return `<div class="np-anim-glow">
+        <div class="np-glow-ring"></div>
+        <img class="np-vinyl-art" src="${artUrl}" alt="" onerror="this.src='${PLACEHOLDER}'">
+      </div>`;
+    case 'reggie':
+      return `<div class="np-anim-reggie">
+        ${REGGIE_SVG}
+        <img class="np-vinyl-art" src="${artUrl}" alt="" onerror="this.src='${PLACEHOLDER}'">
+      </div>`;
+    default:
+      return '';
+  }
+}
+
+function buildAnimPickerHTML(selected) {
+  const anims = [
+    { id:'vinyl', label:'Spinning Vinyl', icon:'💿' },
+    { id:'waves', label:'Sound Waves', icon:'🎛️' },
+    { id:'glow', label:'Neon Glow', icon:'✨' },
+    { id:'reggie', label:'DJ Reggie', icon:'🐕' },
+  ];
+  return `<div class="form-label" style="margin-bottom:4px;">Now Playing Animation</div>
+    <div class="anim-picker">${anims.map(a =>
+      `<div class="anim-picker-option ${selected===a.id?'selected':''}" onclick="selectAnim('${a.id}')">
+        <div class="anim-icon" style="font-size:24px;line-height:36px;">${a.icon}</div>
+        <div class="anim-picker-label">${a.label}</div>
+      </div>`
+    ).join('')}</div>`;
+}
+
+function selectAnim(id) {
+  currentAnim = id;
+  localStorage.setItem('npAnim', id);
+  document.querySelectorAll('.anim-picker-option').forEach(el => el.classList.remove('selected'));
+  document.querySelectorAll('.anim-picker-option').forEach(el => {
+    if (el.onclick.toString().includes(`'${id}'`)) el.classList.add('selected');
+  });
+  // Re-render if something is playing
+  if (nowPlayingId !== null) renderNowPlaying();
+}
+
 function renderNowPlaying() {
   const npDot = document.getElementById('npDot');
   const npBadge = document.getElementById('npBadgeText');
-  const npContainer = document.getElementById('npVinylContainer');
-  const npArt = document.getElementById('npArt');
+  const npAnimContainer = document.getElementById('npAnimContainer');
   const npInfo = document.getElementById('npInfo');
   const npIdle = document.getElementById('npIdle');
   const topbarText = document.getElementById('topbarNpText');
@@ -820,12 +1172,11 @@ function renderNowPlaying() {
   const playing = nowPlayingId !== null ? albums[nowPlayingId] : null;
 
   if (playing) {
+    const artUrl = getArt(playing.artist, playing.album);
     npDot.classList.remove('np-idle-dot');
     npBadge.textContent = 'Now Playing';
-    npContainer.classList.add('np-spinning');
-    npContainer.style.display = '';
-    npArt.src = getArt(playing.artist, playing.album);
-    npArt.alt = `${playing.artist} - ${playing.album}`;
+    npAnimContainer.style.display = '';
+    npAnimContainer.innerHTML = buildAnimHTML(currentAnim, artUrl);
 
     npInfo.style.display = '';
     npIdle.style.display = 'none';
@@ -842,8 +1193,8 @@ function renderNowPlaying() {
   } else {
     npDot.classList.add('np-idle-dot');
     npBadge.textContent = 'Vinyl Night — Wednesdays';
-    npContainer.classList.remove('np-spinning');
-    npContainer.style.display = 'none';
+    npAnimContainer.style.display = 'none';
+    npAnimContainer.innerHTML = '';
     npInfo.style.display = 'none';
     npIdle.style.display = '';
 
@@ -1095,7 +1446,8 @@ function openDetail(idx) {
   if (isNP) {
     actionsHtml = `<button class="detail-btn" onclick="clearNowPlaying();closeDetail()">⏹ Stop Playing</button>`;
   } else {
-    actionsHtml = `<button class="detail-btn detail-btn-np" onclick="setNowPlaying(${idx});closeDetail()">▶ Set as Now Playing</button>`;
+    actionsHtml = `<div style="width:100%;margin-bottom:8px;">${buildAnimPickerHTML(currentAnim)}</div>`;
+    actionsHtml += `<button class="detail-btn detail-btn-np" onclick="setNowPlaying(${idx});closeDetail()">▶ Set as Now Playing</button>`;
   }
   actionsHtml += `<button class="detail-btn detail-btn-delete" onclick="showDeleteConfirm(${idx})">🗑 Delete</button>`;
   document.getElementById('detailActions').innerHTML = actionsHtml;
@@ -1154,9 +1506,14 @@ function openAddModal() {
   document.getElementById('formArtist').value = '';
   document.getElementById('formAlbum').value = '';
   document.getElementById('formGenre').value = '';
+  document.getElementById('formCustomGenre').value = '';
+  document.getElementById('formCustomGenre').style.display = 'none';
   document.getElementById('formDate').value = new Date().toISOString().split('T')[0];
   document.getElementById('formSetPlaying').checked = false;
+  document.getElementById('artistSuggestions').classList.remove('open');
+  document.getElementById('albumSuggestions').classList.remove('open');
   selectedArtUrl = null;
+  artistMBID = null;
 }
 
 function closeAddModal() {
@@ -1198,7 +1555,7 @@ async function loadArtOptions() {
     const div = document.createElement('div');
     div.className = 'art-picker-option';
     div.title = opt.label;
-    div.innerHTML = `<img src="${opt.thumb}" alt="${opt.label}"><div class="art-picker-option-label">${opt.label}</div>`;
+    div.innerHTML = `<img src="${opt.thumb}" alt="${opt.label}">`;
     div.onclick = () => selectArt(opt.url, div);
     row.appendChild(div);
 
@@ -1229,7 +1586,7 @@ async function submitAlbum() {
   const dj = document.getElementById('formDJ').value;
   const artist = document.getElementById('formArtist').value.trim();
   const album = document.getElementById('formAlbum').value.trim();
-  const genre = document.getElementById('formGenre').value;
+  const genre = getSelectedGenre();
   const date = document.getElementById('formDate').value;
   const setPlaying = document.getElementById('formSetPlaying').checked;
 
