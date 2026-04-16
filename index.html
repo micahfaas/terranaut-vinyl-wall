@@ -821,6 +821,10 @@ async function init() {
       const res = await fetch(SHEETS_API_URL);
       const data = await res.json();
       albums = data.albums || [];
+      // Pre-populate art cache from saved URLs in the sheet
+      albums.forEach(a => {
+        if (a.artUrl) artCache[`${a.artist}|||${a.album}`] = a.artUrl;
+      });
       if (data.nowPlaying !== undefined && data.nowPlaying !== null) {
         nowPlayingId = data.nowPlaying;
       }
@@ -838,6 +842,12 @@ async function init() {
   renderWall();
   setupSearch();
   setupAutocomplete();
+
+  // Auto-open add form if ?add=1 in URL (from QR code)
+  if (new URLSearchParams(window.location.search).get('add') === '1') {
+    showWall();
+    setTimeout(openAddModal, 300);
+  }
 }
 
 function loadSampleData() {
@@ -864,10 +874,22 @@ async function mbFetch(url) {
 async function fetchArt(artist, album) {
   const key = `${artist}|||${album}`;
   if (artCache[key]) return artCache[key];
-  // Try MusicBrainz + Cover Art Archive
+  // Try iTunes first (fast, no rate limit — best for bulk loading)
+  try {
+    const q = encodeURIComponent(`${artist} ${album}`);
+    const res = await fetch(`https://itunes.apple.com/search?term=${q}&media=music&entity=album&limit=5`);
+    const data = await res.json();
+    if (data.results?.length > 0) {
+      const al = artist.toLowerCase();
+      const m = data.results.find(r => r.artistName.toLowerCase().includes(al)) || data.results[0];
+      const url = m.artworkUrl100.replace('100x100','400x400').replace('http://','https://');
+      artCache[key] = url; return url;
+    }
+  } catch(e) {}
+  // Fallback: MusicBrainz + Cover Art Archive
   try {
     const q = encodeURIComponent(`release:"${album}" AND artist:"${artist}"`);
-    const data = await mbFetch(`${MB_BASE}/release/?query=${q}&limit=3&fmt=json`);
+    const data = await mbFetch(`${MB_BASE}/release/?query=${q}&limit=2&fmt=json`);
     if (data.releases) {
       for (const rel of data.releases) {
         try {
@@ -882,18 +904,6 @@ async function fetchArt(artist, album) {
           }
         } catch(e) {}
       }
-    }
-  } catch(e) {}
-  // Fallback: iTunes
-  try {
-    const q = encodeURIComponent(`${artist} ${album}`);
-    const res = await fetch(`https://itunes.apple.com/search?term=${q}&media=music&entity=album&limit=5`);
-    const data = await res.json();
-    if (data.results?.length > 0) {
-      const al = artist.toLowerCase();
-      const m = data.results.find(r => r.artistName.toLowerCase().includes(al)) || data.results[0];
-      const url = m.artworkUrl100.replace('100x100','600x600').replace('http://','https://');
-      artCache[key] = url; return url;
     }
   } catch(e) {}
   artCache[key] = PLACEHOLDER; return PLACEHOLDER;
@@ -1028,15 +1038,13 @@ function getSelectedGenre() {
 }
 
 async function fetchAllArt() {
-  // Fetch art in parallel batches of 5
-  for (let i = 0; i < albums.length; i += 5) {
-    const batch = albums.slice(i, i + 5);
-    await Promise.all(batch.map(async (a) => {
-      await fetchArt(a.artist, a.album);
-      // Re-render to show art progressively
-      renderCurrentView();
-      renderNowPlaying();
-    }));
+  // Fetch art in parallel batches of 8 (iTunes has no rate limit)
+  for (let i = 0; i < albums.length; i += 8) {
+    const batch = albums.slice(i, i + 8);
+    await Promise.all(batch.map(a => fetchArt(a.artist, a.album)));
+    // Re-render once per batch instead of per album
+    renderCurrentView();
+    renderNowPlaying();
   }
 }
 
@@ -1311,7 +1319,7 @@ function renderGrid() {
         <div class="album-card-art-wrap">
           ${isNP ? '<div class="album-card-np-badge">Playing</div>' : ''}
           <button class="album-card-set-np" onclick="event.stopPropagation();setNowPlaying(${idx})">▶ Play</button>
-          <img class="album-card-art" src="${art}" alt="${a.artist} - ${a.album}" loading="lazy"
+          <img class="album-card-art" src="${art}" alt="${a.artist} - ${a.album}" loading="lazy" crossorigin="anonymous"
                onerror="this.src='${PLACEHOLDER}'">
           <div class="album-card-vinyl"></div>
         </div>
@@ -1343,7 +1351,7 @@ function renderList() {
     const art = getArt(a.artist, a.album);
     html += `
       <div class="list-row" onclick="openDetail(${idx})">
-        <img class="list-art" src="${art}" alt="" loading="lazy" onerror="this.src='${PLACEHOLDER}'">
+        <img class="list-art" src="${art}" alt="" loading="lazy" crossorigin="anonymous" onerror="this.src='${PLACEHOLDER}'">
         <div class="list-info">
           <div class="list-artist">${isNP ? '▶ ' : ''}${a.artist}</div>
           <div class="list-album">${a.album}</div>
@@ -1590,12 +1598,15 @@ async function submitAlbum() {
     artCache[key] = PLACEHOLDER;
   }
 
+  // Get the resolved art URL to save to the sheet
+  const resolvedArtUrl = artCache[key] !== PLACEHOLDER ? artCache[key] : '';
+
   // Try posting to Google Sheets
   if (SHEETS_API_URL && !usingSampleData) {
     try {
       const res = await fetch(SHEETS_API_URL, {
         method: 'POST',
-        body: JSON.stringify({ action: 'addAlbum', ...newAlbum, setPlaying }),
+        body: JSON.stringify({ action: 'addAlbum', ...newAlbum, artUrl: resolvedArtUrl, setPlaying }),
       });
       const data = await res.json();
       if (data.error) throw new Error(data.error);
