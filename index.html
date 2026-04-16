@@ -297,15 +297,40 @@ input,select,textarea{font-family:inherit;color:inherit;}
 .form-row { display:flex;gap:12px; }
 .form-row .form-group { flex:1; }
 
-.form-preview {
-  display:none;align-items:center;gap:14px;padding:12px;border-radius:8px;
-  background:var(--bg);border:1px solid var(--fg);margin-bottom:16px;
+.art-picker { margin-bottom:16px;display:none; }
+.art-picker.visible { display:block; }
+.art-picker-row { display:flex;gap:10px;flex-wrap:wrap;margin-top:8px; }
+.art-picker-option {
+  width:80px;height:80px;border-radius:8px;overflow:hidden;cursor:pointer;
+  border:3px solid transparent;transition:all .2s;position:relative;flex-shrink:0;
 }
-.form-preview.visible { display:flex; }
-.form-preview-art { width:56px;height:56px;border-radius:6px;object-fit:cover;background:var(--fg); }
-.form-preview-info { flex:1; }
-.form-preview-artist { font-size:14px;font-weight:700;color:var(--cream); }
-.form-preview-album { font-size:12px;color:var(--cream-d); }
+.art-picker-option:hover { border-color:var(--amber-d);transform:scale(1.05); }
+.art-picker-option.selected { border-color:var(--amber);box-shadow:0 0 12px #d4883a40; }
+.art-picker-option.selected::after {
+  content:'✓';position:absolute;bottom:4px;right:4px;width:20px;height:20px;
+  background:var(--amber);color:var(--bg);border-radius:50%;font-size:11px;font-weight:900;
+  display:flex;align-items:center;justify-content:center;
+}
+.art-picker-option img { width:100%;height:100%;object-fit:cover; }
+.art-picker-none {
+  width:80px;height:80px;border-radius:8px;cursor:pointer;
+  border:3px dashed var(--mg);display:flex;align-items:center;justify-content:center;
+  font-size:10px;color:var(--wg);text-align:center;padding:4px;transition:all .2s;
+}
+.art-picker-none:hover { border-color:var(--cream-d); }
+.art-picker-none.selected { border-color:var(--amber);border-style:solid; }
+
+.detail-btn-delete { background:transparent;color:var(--red);border:1px solid var(--red); }
+.detail-btn-delete:hover { background:var(--red);color:#fff; }
+
+.confirm-delete { margin-top:12px;padding:12px;border-radius:8px;background:var(--bg);border:1px solid var(--red); }
+.confirm-delete p { font-size:13px;color:var(--cream-d);margin-bottom:10px; }
+.confirm-delete-actions { display:flex;gap:8px; }
+.confirm-delete-btn { padding:8px 16px;border-radius:6px;font-size:12px;font-weight:600; }
+.confirm-delete-yes { background:var(--red);color:#fff; }
+.confirm-delete-yes:hover { filter:brightness(1.15); }
+.confirm-delete-no { background:var(--fg);color:var(--cream-d); }
+.confirm-delete-no:hover { background:var(--mg); }
 
 .form-actions { display:flex;gap:10px;margin-top:20px; }
 .btn-primary {
@@ -501,11 +526,12 @@ input,select,textarea{font-family:inherit;color:inherit;}
       <button class="modal-close" onclick="closeAddModal()">✕</button>
     </div>
     <div class="modal-body">
-      <div class="form-preview" id="formPreview">
-        <img class="form-preview-art" id="formPreviewArt" src="" alt="">
-        <div class="form-preview-info">
-          <div class="form-preview-artist" id="formPreviewArtist"></div>
-          <div class="form-preview-album" id="formPreviewAlbum"></div>
+      <div class="art-picker" id="artPicker">
+        <label class="form-label">Choose Album Art</label>
+        <div class="art-picker-row" id="artPickerRow"></div>
+        <div class="art-picker-loading" id="artPickerLoading" style="display:none;">
+          <div class="loading-spinner" style="width:20px;height:20px;border-width:2px;margin:8px auto;"></div>
+          <span style="font-size:11px;color:var(--wg);">Searching for covers...</span>
         </div>
       </div>
 
@@ -590,6 +616,13 @@ input,select,textarea{font-family:inherit;color:inherit;}
       <div class="detail-album" id="detailAlbum"></div>
       <div class="detail-meta" id="detailMeta"></div>
       <div class="detail-actions" id="detailActions"></div>
+      <div class="confirm-delete" id="confirmDelete" style="display:none;">
+        <p>Remove this album from the wall? This can't be undone.</p>
+        <div class="confirm-delete-actions">
+          <button class="confirm-delete-btn confirm-delete-yes" id="confirmDeleteYes">Yes, delete it</button>
+          <button class="confirm-delete-btn confirm-delete-no" onclick="document.getElementById('confirmDelete').style.display='none'">Cancel</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -707,21 +740,29 @@ function loadSampleData() {
 async function fetchArt(artist, album) {
   const key = `${artist}|||${album}`;
   if (artCache[key]) return artCache[key];
-  try {
-    const q = encodeURIComponent(`${artist} ${album}`);
-    const res = await fetch(`https://itunes.apple.com/search?term=${q}&media=music&entity=album&limit=3`);
-    const data = await res.json();
-    if (data.results && data.results.length > 0) {
-      // Get high-res art
-      let url = data.results[0].artworkUrl100.replace('100x100', '600x600');
-      // Force https
-      url = url.replace('http://', 'https://');
-      artCache[key] = url;
-      return url;
-    }
-  } catch(e) { console.warn('Art fetch failed:', artist, album); }
+  const options = await fetchArtOptions(artist, album);
+  if (options.length > 0) {
+    artCache[key] = options[0].url;
+    return options[0].url;
+  }
   artCache[key] = PLACEHOLDER;
   return PLACEHOLDER;
+}
+
+async function fetchArtOptions(artist, album) {
+  try {
+    const q = encodeURIComponent(`${artist} ${album}`);
+    const res = await fetch(`https://itunes.apple.com/search?term=${q}&media=music&entity=album&limit=6`);
+    const data = await res.json();
+    if (data.results && data.results.length > 0) {
+      return data.results.map(r => ({
+        url: r.artworkUrl100.replace('100x100', '600x600').replace('http://', 'https://'),
+        thumb: r.artworkUrl100.replace('http://', 'https://'),
+        label: `${r.artistName} — ${r.collectionName}`,
+      }));
+    }
+  } catch(e) { console.warn('Art fetch failed:', artist, album); }
+  return [];
 }
 
 async function fetchAllArt() {
@@ -1034,9 +1075,44 @@ function openDetail(idx) {
   } else {
     actionsHtml = `<button class="detail-btn detail-btn-np" onclick="setNowPlaying(${idx});closeDetail()">▶ Set as Now Playing</button>`;
   }
+  actionsHtml += `<button class="detail-btn detail-btn-delete" onclick="showDeleteConfirm(${idx})">🗑 Delete</button>`;
   document.getElementById('detailActions').innerHTML = actionsHtml;
 
+  document.getElementById('confirmDelete').style.display = 'none';
   document.getElementById('detailOverlay').classList.add('open');
+}
+
+function showDeleteConfirm(idx) {
+  const confirmEl = document.getElementById('confirmDelete');
+  confirmEl.style.display = 'block';
+  document.getElementById('confirmDeleteYes').onclick = () => deleteAlbum(idx);
+}
+
+async function deleteAlbum(idx) {
+  const a = albums[idx];
+
+  // If this was now playing, clear it
+  if (nowPlayingId === idx) {
+    nowPlayingId = null;
+  } else if (nowPlayingId !== null && nowPlayingId > idx) {
+    nowPlayingId--;
+  }
+
+  // Delete from Google Sheets
+  if (SHEETS_API_URL && !usingSampleData) {
+    try {
+      await fetch(SHEETS_API_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'deleteAlbum', index: idx }),
+      });
+    } catch(e) { console.warn('Failed to delete from Sheets:', e); }
+  }
+
+  albums.splice(idx, 1);
+  closeDetail();
+  renderNowPlaying();
+  renderWall();
+  showToast(`Removed: ${a.artist} — ${a.album}`, 'success');
 }
 
 function closeDetail() {
@@ -1046,41 +1122,85 @@ function closeDetail() {
 // ═══════════════════════════════════════
 //  ADD ALBUM
 // ═══════════════════════════════════════
+let selectedArtUrl = null;
+
 function openAddModal() {
   document.getElementById('addModal').classList.add('open');
-  document.getElementById('formPreview').classList.remove('visible');
+  document.getElementById('artPicker').classList.remove('visible');
+  document.getElementById('artPickerRow').innerHTML = '';
   document.getElementById('formDJ').value = '';
   document.getElementById('formArtist').value = '';
   document.getElementById('formAlbum').value = '';
   document.getElementById('formGenre').value = '';
   document.getElementById('formDate').value = new Date().toISOString().split('T')[0];
   document.getElementById('formSetPlaying').checked = false;
+  selectedArtUrl = null;
 }
 
 function closeAddModal() {
   document.getElementById('addModal').classList.remove('open');
 }
 
-// Live album art preview
+// Live art picker
 let artDebounce = null;
 ['formArtist', 'formAlbum'].forEach(id => {
   document.getElementById(id).addEventListener('input', () => {
     clearTimeout(artDebounce);
-    artDebounce = setTimeout(previewArt, 600);
+    artDebounce = setTimeout(loadArtOptions, 600);
   });
 });
 
-async function previewArt() {
+async function loadArtOptions() {
   const artist = document.getElementById('formArtist').value.trim();
   const album = document.getElementById('formAlbum').value.trim();
   if (!artist || !album) return;
 
-  const art = await fetchArt(artist, album);
-  const preview = document.getElementById('formPreview');
-  document.getElementById('formPreviewArt').src = art;
-  document.getElementById('formPreviewArtist').textContent = artist;
-  document.getElementById('formPreviewAlbum').textContent = album;
-  preview.classList.add('visible');
+  const picker = document.getElementById('artPicker');
+  const row = document.getElementById('artPickerRow');
+  const loading = document.getElementById('artPickerLoading');
+
+  picker.classList.add('visible');
+  row.innerHTML = '';
+  loading.style.display = 'flex';
+  selectedArtUrl = null;
+
+  const options = await fetchArtOptions(artist, album);
+  loading.style.display = 'none';
+
+  if (options.length === 0) {
+    row.innerHTML = '<span style="font-size:12px;color:var(--wg);padding:8px;">No album art found — album will use a placeholder.</span>';
+    return;
+  }
+
+  options.forEach((opt, i) => {
+    const div = document.createElement('div');
+    div.className = 'art-picker-option';
+    div.title = opt.label;
+    div.innerHTML = `<img src="${opt.thumb}" alt="${opt.label}">`;
+    div.onclick = () => selectArt(opt.url, div);
+    row.appendChild(div);
+
+    // Auto-select the first option
+    if (i === 0) selectArt(opt.url, div);
+  });
+
+  // Add a "none" option
+  const none = document.createElement('div');
+  none.className = 'art-picker-none';
+  none.textContent = 'No art';
+  none.onclick = () => {
+    selectedArtUrl = PLACEHOLDER;
+    row.querySelectorAll('.art-picker-option,.art-picker-none').forEach(el => el.classList.remove('selected'));
+    none.classList.add('selected');
+  };
+  row.appendChild(none);
+}
+
+function selectArt(url, el) {
+  selectedArtUrl = url;
+  const row = document.getElementById('artPickerRow');
+  row.querySelectorAll('.art-picker-option,.art-picker-none').forEach(e => e.classList.remove('selected'));
+  el.classList.add('selected');
 }
 
 async function submitAlbum() {
@@ -1101,6 +1221,16 @@ async function submitAlbum() {
   btn.textContent = 'Adding...';
 
   const newAlbum = { artist, album, genre, dj, date, id: albums.length };
+
+  // Cache the selected art (or fetch if user didn't wait for picker)
+  const key = `${artist}|||${album}`;
+  if (selectedArtUrl && selectedArtUrl !== PLACEHOLDER) {
+    artCache[key] = selectedArtUrl;
+  } else if (!selectedArtUrl) {
+    await fetchArt(artist, album);
+  } else {
+    artCache[key] = PLACEHOLDER;
+  }
 
   // Try posting to Google Sheets
   if (SHEETS_API_URL && !usingSampleData) {
@@ -1124,9 +1254,6 @@ async function submitAlbum() {
   if (setPlaying) {
     nowPlayingId = 0;
   }
-
-  // Fetch art for new album
-  await fetchArt(artist, album);
 
   closeAddModal();
   renderNowPlaying();
