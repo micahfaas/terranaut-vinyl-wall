@@ -63,16 +63,16 @@ input,select,textarea{font-family:inherit;color:inherit;}
 .np-idle-dot { background:var(--wg);animation:none; }
 
 .np-vinyl-container {
-  position:relative;width:320px;height:320px;margin:0 auto 32px;animation:slideUp .8s ease;
+  position:relative;width:320px;height:280px;margin:0 auto 40px;animation:slideUp .8s ease;
 }
 .np-album-art {
   width:200px;height:200px;border-radius:8px;object-fit:cover;position:absolute;
-  top:50%;left:50%;transform:translate(-50%,-50%);z-index:2;
+  top:40px;left:50%;transform:translateX(-50%);z-index:2;
   box-shadow:0 8px 32px rgba(0,0,0,.5);
 }
 .np-vinyl-disc {
-  width:300px;height:300px;border-radius:50%;position:absolute;top:50%;left:50%;
-  transform:translate(-40%,-50%);z-index:1;
+  width:200px;height:200px;border-radius:50%;position:absolute;top:40px;left:50%;
+  transform:translateX(-2%);z-index:1;
   background:radial-gradient(circle at 50% 50%, #1a1612 22%, #2a2520 23%, #1a1612 24%, #2a2520 25%, 
     #1c1814 30%, #2a2520 35%, #1a1612 36%, #2a2520 37%, #1c1814 42%, 
     #2a2520 50%, #1a1612 51%, #2a2520 52%, #1c1814 58%, #2a2520 65%, 
@@ -301,19 +301,23 @@ input,select,textarea{font-family:inherit;color:inherit;}
 .art-picker.visible { display:block; }
 .art-picker-row { display:flex;gap:10px;flex-wrap:wrap;margin-top:8px; }
 .art-picker-option {
-  width:80px;height:80px;border-radius:8px;overflow:hidden;cursor:pointer;
+  width:90px;border-radius:8px;overflow:hidden;cursor:pointer;
   border:3px solid transparent;transition:all .2s;position:relative;flex-shrink:0;
 }
-.art-picker-option:hover { border-color:var(--amber-d);transform:scale(1.05); }
+.art-picker-option:hover { border-color:var(--amber-d);transform:scale(1.02); }
 .art-picker-option.selected { border-color:var(--amber);box-shadow:0 0 12px #d4883a40; }
 .art-picker-option.selected::after {
-  content:'✓';position:absolute;bottom:4px;right:4px;width:20px;height:20px;
+  content:'✓';position:absolute;top:4px;right:4px;width:20px;height:20px;
   background:var(--amber);color:var(--bg);border-radius:50%;font-size:11px;font-weight:900;
-  display:flex;align-items:center;justify-content:center;
+  display:flex;align-items:center;justify-content:center;z-index:2;
 }
-.art-picker-option img { width:100%;height:100%;object-fit:cover; }
+.art-picker-option img { width:90px;height:90px;object-fit:cover;display:block; }
+.art-picker-option-label {
+  font-size:9px;color:var(--cream-d);padding:4px 5px;line-height:1.2;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:var(--bg2);
+}
 .art-picker-none {
-  width:80px;height:80px;border-radius:8px;cursor:pointer;
+  width:90px;min-height:90px;border-radius:8px;cursor:pointer;
   border:3px dashed var(--mg);display:flex;align-items:center;justify-content:center;
   font-size:10px;color:var(--wg);text-align:center;padding:4px;transition:all .2s;
 }
@@ -426,9 +430,9 @@ input,select,textarea{font-family:inherit;color:inherit;}
 /*  RESPONSIVE                            */
 /* ═══════════════════════════════════════ */
 @media(max-width:600px) {
-  .np-vinyl-container { width:260px;height:260px; }
+  .np-vinyl-container { width:260px;height:240px; }
   .np-album-art { width:160px;height:160px; }
-  .np-vinyl-disc { width:240px;height:240px; }
+  .np-vinyl-disc { width:160px;height:160px; }
   .np-artist { font-size:26px; }
   .header h1 { font-size:32px; }
   .grid { grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;padding:14px; }
@@ -752,10 +756,28 @@ async function fetchArt(artist, album) {
 async function fetchArtOptions(artist, album) {
   try {
     const q = encodeURIComponent(`${artist} ${album}`);
-    const res = await fetch(`https://itunes.apple.com/search?term=${q}&media=music&entity=album&limit=6`);
+    const res = await fetch(`https://itunes.apple.com/search?term=${q}&media=music&entity=album&limit=15`);
     const data = await res.json();
     if (data.results && data.results.length > 0) {
-      return data.results.map(r => ({
+      const artistLower = artist.toLowerCase();
+      // Score results: exact artist match first, then partial, then others
+      const scored = data.results.map(r => {
+        const rArtist = r.artistName.toLowerCase();
+        let score = 0;
+        if (rArtist === artistLower) score = 100;
+        else if (rArtist.includes(artistLower) || artistLower.includes(rArtist)) score = 50;
+        return { ...r, score };
+      });
+      // Sort by score descending, then deduplicate by collection name
+      scored.sort((a, b) => b.score - a.score);
+      const seen = new Set();
+      const unique = scored.filter(r => {
+        const key = `${r.artistName}|||${r.collectionName}`.toLowerCase();
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+      return unique.slice(0, 6).map(r => ({
         url: r.artworkUrl100.replace('100x100', '600x600').replace('http://', 'https://'),
         thumb: r.artworkUrl100.replace('http://', 'https://'),
         label: `${r.artistName} — ${r.collectionName}`,
@@ -1176,7 +1198,7 @@ async function loadArtOptions() {
     const div = document.createElement('div');
     div.className = 'art-picker-option';
     div.title = opt.label;
-    div.innerHTML = `<img src="${opt.thumb}" alt="${opt.label}">`;
+    div.innerHTML = `<img src="${opt.thumb}" alt="${opt.label}"><div class="art-picker-option-label">${opt.label}</div>`;
     div.onclick = () => selectArt(opt.url, div);
     row.appendChild(div);
 
