@@ -64,24 +64,26 @@ input,select,textarea{font-family:inherit;color:inherit;}
 
 /* Animation container */
 .np-anim-container {
-  position:relative;width:320px;height:320px;margin:0 auto 32px;animation:slideUp .8s ease;
+  position:relative;width:320px;height:280px;margin:0 auto 40px;animation:slideUp .8s ease;
+  overflow:hidden;
 }
 
 /* === ANIMATION 1: SPINNING VINYL === */
+.np-anim-vinyl { position:relative;width:100%;height:100%; }
 .np-anim-vinyl .np-vinyl-art {
-  width:200px;height:200px;border-radius:8px;object-fit:cover;position:absolute;
-  top:50%;left:40%;transform:translate(-50%,-50%);z-index:2;
+  width:180px;height:180px;border-radius:8px;object-fit:cover;position:absolute;
+  top:50px;left:30px;z-index:2;
   box-shadow:0 8px 32px rgba(0,0,0,.5);
 }
 .np-anim-vinyl .np-vinyl-disc {
-  width:240px;height:240px;border-radius:50%;position:absolute;top:50%;left:55%;
-  transform:translate(-50%,-50%);z-index:1;
+  width:200px;height:200px;border-radius:50%;position:absolute;top:40px;right:20px;z-index:1;
   background:radial-gradient(circle at 50% 50%, #1a1612 22%, #2a2520 23%, #1a1612 24%, #2a2520 25%, 
     #1c1814 30%, #2a2520 35%, #1a1612 36%, #2a2520 37%, #1c1814 42%, 
     #2a2520 50%, #1a1612 51%, #2a2520 52%, #1c1814 58%, #2a2520 65%, 
     #1a1612 66%, #2a2520 67%, #1c1814 73%, #2a2520 80%, #1a1612 81%, 
     #2a2520 82%, #1c1814 90%, #2e2720 100%);
   box-shadow:0 4px 24px rgba(0,0,0,.4);
+  -webkit-animation:spin 3s linear infinite;
   animation:spin 3s linear infinite;
 }
 .np-anim-vinyl .np-vinyl-disc::after {
@@ -91,14 +93,15 @@ input,select,textarea{font-family:inherit;color:inherit;}
 }
 
 /* === ANIMATION 2: SOUND WAVES === */
+.np-anim-waves { position:relative;width:100%;height:100%; }
 .np-anim-waves .np-vinyl-art {
   width:180px;height:180px;border-radius:50%;object-fit:cover;position:absolute;
-  top:45%;left:50%;transform:translate(-50%,-50%);z-index:2;
+  top:20px;left:50%;transform:translateX(-50%);z-index:2;
   box-shadow:0 0 0 4px var(--fg), 0 8px 32px rgba(0,0,0,.5);
 }
 .np-anim-waves .np-eq-bars {
-  position:absolute;bottom:0;left:50%;transform:translateX(-50%);
-  display:flex;gap:4px;align-items:flex-end;height:80px;z-index:1;
+  position:absolute;bottom:10px;left:50%;transform:translateX(-50%);
+  display:flex;gap:4px;align-items:flex-end;height:60px;z-index:1;
 }
 .np-anim-waves .np-eq-bar {
   width:6px;border-radius:3px;background:var(--amber);opacity:.7;
@@ -110,37 +113,44 @@ input,select,textarea{font-family:inherit;color:inherit;}
 @keyframes eqBounce5 { 0%,100%{height:20px} 50%{height:70px} }
 
 /* === ANIMATION 3: NEON GLOW === */
+.np-anim-glow { position:relative;width:100%;height:100%; }
 .np-anim-glow .np-vinyl-art {
   width:220px;height:220px;border-radius:12px;object-fit:cover;position:absolute;
-  top:45%;left:50%;transform:translate(-50%,-50%);z-index:2;
+  top:30px;left:50%;transform:translateX(-50%);z-index:2;
   box-shadow:0 0 40px #d4883a30, 0 0 80px #d4883a15;
   animation:neonPulse 2.5s ease-in-out infinite;
 }
 @keyframes neonPulse {
-  0%,100%{box-shadow:0 0 40px #d4883a30, 0 0 80px #d4883a15;transform:translate(-50%,-50%) scale(1);}
-  50%{box-shadow:0 0 60px #d4883a50, 0 0 120px #d4883a25, 0 0 200px #d4883a10;transform:translate(-50%,-50%) scale(1.02);}
+  0%,100%{box-shadow:0 0 40px #d4883a30, 0 0 80px #d4883a15;transform:translateX(-50%) scale(1);}
+  50%{box-shadow:0 0 60px #d4883a50, 0 0 120px #d4883a25, 0 0 200px #d4883a10;transform:translateX(-50%) scale(1.02);}
 }
 .np-anim-glow .np-glow-ring {
-  position:absolute;top:45%;left:50%;transform:translate(-50%,-50%);
+  position:absolute;top:20px;left:50%;transform:translateX(-50%);
   width:280px;height:280px;border-radius:16px;z-index:1;
   border:2px solid #d4883a20;
   animation:glowRingPulse 2.5s ease-in-out infinite;
 }
 @keyframes glowRingPulse {
-  0%,100%{opacity:.3;transform:translate(-50%,-50%) scale(1);}
-  50%{opacity:.7;transform:translate(-50%,-50%) scale(1.05);}
+  0%,100%{opacity:.3;transform:translateX(-50%) scale(1);}
+  50%{opacity:.7;transform:translateX(-50%) scale(1.05);}
 }
 
 /* === ANIMATION 4: DJ REGGIE === */
+.np-anim-reggie { position:relative;width:100%;height:100%; }
 .np-anim-reggie .np-vinyl-art {
-  width:160px;height:160px;border-radius:8px;object-fit:cover;position:absolute;
-  top:8px;right:8px;z-index:1;
+  width:130px;height:130px;border-radius:8px;object-fit:cover;position:absolute;
+  top:8px;right:10px;z-index:1;
   box-shadow:0 4px 16px rgba(0,0,0,.4);
 }
-.np-anim-reggie .np-reggie-svg {
-  position:absolute;top:50%;left:45%;transform:translate(-50%,-50%);z-index:2;
+.np-anim-reggie .np-reggie-frames {
+  position:absolute;bottom:0;left:50%;transform:translateX(-50%);z-index:2;
   width:220px;height:220px;
 }
+.np-reggie-frame {
+  position:absolute;inset:0;width:100%;height:100%;object-fit:contain;
+  opacity:0;transition:none;
+}
+.np-reggie-frame.active { opacity:1; }
 
 /* Animation picker (in modals) */
 .anim-picker { display:flex;gap:10px;flex-wrap:wrap;margin-top:8px; }
@@ -515,13 +525,13 @@ input,select,textarea{font-family:inherit;color:inherit;}
 /*  RESPONSIVE                            */
 /* ═══════════════════════════════════════ */
 @media(max-width:600px) {
-  .np-anim-container { width:280px;height:280px; }
-  .np-anim-vinyl .np-vinyl-art { width:160px;height:160px; }
-  .np-anim-vinyl .np-vinyl-disc { width:200px;height:200px; }
+  .np-anim-container { width:280px;height:260px; }
+  .np-anim-vinyl .np-vinyl-art { width:150px;height:150px;left:20px; }
+  .np-anim-vinyl .np-vinyl-disc { width:170px;height:170px; }
   .np-anim-waves .np-vinyl-art { width:150px;height:150px; }
   .np-anim-glow .np-vinyl-art { width:180px;height:180px; }
-  .np-anim-reggie .np-reggie-svg { width:180px;height:180px; }
-  .np-anim-reggie .np-vinyl-art { width:120px;height:120px; }
+  .np-anim-reggie .np-reggie-frames { width:180px;height:180px; }
+  .np-anim-reggie .np-vinyl-art { width:100px;height:100px; }
   .np-artist { font-size:26px; }
   .header h1 { font-size:32px; }
   .grid { grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;padding:14px; }
@@ -1036,77 +1046,34 @@ function getArt(artist, album) {
 // ═══════════════════════════════════════
 let currentAnim = localStorage.getItem('npAnim') || 'vinyl';
 
-const REGGIE_SVG = `<svg viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg" class="np-reggie-svg">
-  <style>
-    @keyframes headBob{0%,100%{transform:rotate(-2deg) translateY(0)}25%{transform:rotate(3deg) translateY(-4px)}50%{transform:rotate(-1deg) translateY(-2px)}75%{transform:rotate(4deg) translateY(-6px)}}
-    @keyframes earFlop{0%,100%{transform:rotate(0deg)}30%{transform:rotate(5deg)}70%{transform:rotate(-3deg)}}
-    @keyframes tongueBob{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.15)}}
-    .reggie-head{animation:headBob .8s ease-in-out infinite;transform-origin:110px 130px}
-    .reggie-ear-l{animation:earFlop .8s ease-in-out infinite;transform-origin:62px 85px}
-    .reggie-ear-r{animation:earFlop .8s ease-in-out .1s infinite;transform-origin:158px 85px}
-    .reggie-tongue{animation:tongueBob .8s ease-in-out infinite;transform-origin:110px 155px}
-  </style>
-  <g class="reggie-head">
-    <!-- Body -->
-    <ellipse cx="110" cy="195" rx="65" ry="35" fill="#c8952e"/>
-    <ellipse cx="110" cy="195" rx="55" ry="28" fill="#d4a43a"/>
-    <!-- Neck -->
-    <rect x="80" y="145" width="60" height="55" rx="20" fill="#d4a43a"/>
-    <!-- Head -->
-    <ellipse cx="110" cy="100" rx="52" ry="55" fill="#d4a43a"/>
-    <!-- Face lighter area -->
-    <ellipse cx="110" cy="108" rx="36" ry="40" fill="#e0b84a"/>
-    <!-- Snout -->
-    <ellipse cx="110" cy="125" rx="22" ry="16" fill="#e8c86a"/>
-    <!-- Nose -->
-    <ellipse cx="110" cy="118" rx="10" ry="7" fill="#2a1f14"/>
-    <ellipse cx="110" cy="117" rx="7" ry="4" fill="#3a2f24" opacity=".5"/>
-    <!-- Mouth -->
-    <path d="M100 126 Q110 133 120 126" fill="none" stroke="#8b6914" stroke-width="1.5"/>
-    <!-- Tongue -->
-    <g class="reggie-tongue">
-      <ellipse cx="112" cy="133" rx="6" ry="9" fill="#d47070"/>
-      <ellipse cx="112" cy="131" rx="4" ry="5" fill="#e08080"/>
-    </g>
-    <!-- Eyes -->
-    <ellipse cx="94" cy="96" rx="7" ry="8" fill="#fff"/>
-    <ellipse cx="126" cy="96" rx="7" ry="8" fill="#fff"/>
-    <ellipse cx="95" cy="97" rx="4.5" ry="5" fill="#3a2510"/>
-    <ellipse cx="127" cy="97" rx="4.5" ry="5" fill="#3a2510"/>
-    <circle cx="96" cy="95" r="1.5" fill="#fff"/>
-    <circle cx="128" cy="95" r="1.5" fill="#fff"/>
-    <!-- Eyebrows -->
-    <path d="M84 88 Q90 83 100 86" fill="none" stroke="#b8872a" stroke-width="2" stroke-linecap="round"/>
-    <path d="M136 88 Q130 83 120 86" fill="none" stroke="#b8872a" stroke-width="2" stroke-linecap="round"/>
-    <!-- Ears -->
-    <g class="reggie-ear-l">
-      <ellipse cx="62" cy="90" rx="18" ry="32" fill="#c8952e" transform="rotate(-15 62 90)"/>
-      <ellipse cx="64" cy="92" rx="12" ry="24" fill="#d4a43a" transform="rotate(-15 64 92)"/>
-    </g>
-    <g class="reggie-ear-r">
-      <ellipse cx="158" cy="90" rx="18" ry="32" fill="#c8952e" transform="rotate(15 158 90)"/>
-      <ellipse cx="156" cy="92" rx="12" ry="24" fill="#d4a43a" transform="rotate(15 156 92)"/>
-    </g>
-    <!-- Headphones band -->
-    <path d="M58 82 Q60 30 110 25 Q160 30 162 82" fill="none" stroke="#333" stroke-width="8" stroke-linecap="round"/>
-    <path d="M58 82 Q60 34 110 29 Q160 34 162 82" fill="none" stroke="#444" stroke-width="5" stroke-linecap="round"/>
-    <!-- Headphone pads -->
-    <rect x="42" y="72" width="24" height="32" rx="10" fill="#333"/>
-    <rect x="44" y="75" width="20" height="26" rx="8" fill="#222"/>
-    <rect x="46" y="80" width="16" height="16" rx="6" fill="#d4883a" opacity=".8"/>
-    <rect x="154" y="72" width="24" height="32" rx="10" fill="#333"/>
-    <rect x="156" y="75" width="20" height="26" rx="8" fill="#222"/>
-    <rect x="158" y="80" width="16" height="16" rx="6" fill="#d4883a" opacity=".8"/>
-  </g>
-</svg>`;
+// DJ Reggie frame animation
+let reggieInterval = null;
+function startReggieAnimation() {
+  if (reggieInterval) clearInterval(reggieInterval);
+  const frames = document.querySelectorAll('.np-reggie-frame');
+  if (frames.length === 0) return;
+  let current = 0;
+  frames[0].classList.add('active');
+  reggieInterval = setInterval(() => {
+    frames[current].classList.remove('active');
+    current = (current + 1) % frames.length;
+    frames[current].classList.add('active');
+  }, 400); // 400ms per frame = ~2.5 bobs per second
+}
+function stopReggieAnimation() {
+  if (reggieInterval) { clearInterval(reggieInterval); reggieInterval = null; }
+}
 
 function buildAnimHTML(animType, artUrl) {
+  stopReggieAnimation();
+  let html = '';
   switch(animType) {
     case 'vinyl':
-      return `<div class="np-anim-vinyl">
+      html = `<div class="np-anim-vinyl">
         <div class="np-vinyl-disc"></div>
         <img class="np-vinyl-art" src="${artUrl}" alt="" onerror="this.src='${PLACEHOLDER}'">
       </div>`;
+      break;
     case 'waves':
       const bars = Array.from({length:18}, (_, i) => {
         const anim = `eqBounce${(i%5)+1}`;
@@ -1114,23 +1081,32 @@ function buildAnimHTML(animType, artUrl) {
         const delay = (Math.random()*0.5).toFixed(2);
         return `<div class="np-eq-bar" style="animation:${anim} ${dur}s ease-in-out ${delay}s infinite;"></div>`;
       }).join('');
-      return `<div class="np-anim-waves">
+      html = `<div class="np-anim-waves">
         <img class="np-vinyl-art" src="${artUrl}" alt="" onerror="this.src='${PLACEHOLDER}'">
         <div class="np-eq-bars">${bars}</div>
       </div>`;
+      break;
     case 'glow':
-      return `<div class="np-anim-glow">
+      html = `<div class="np-anim-glow">
         <div class="np-glow-ring"></div>
         <img class="np-vinyl-art" src="${artUrl}" alt="" onerror="this.src='${PLACEHOLDER}'">
       </div>`;
+      break;
     case 'reggie':
-      return `<div class="np-anim-reggie">
-        ${REGGIE_SVG}
+      html = `<div class="np-anim-reggie">
+        <div class="np-reggie-frames">
+          <img class="np-reggie-frame active" src="reggie_f1.png" alt="DJ Reggie">
+          <img class="np-reggie-frame" src="reggie_f2.png" alt="DJ Reggie">
+          <img class="np-reggie-frame" src="reggie_f3.png" alt="DJ Reggie">
+          <img class="np-reggie-frame" src="reggie_f4.png" alt="DJ Reggie">
+        </div>
         <img class="np-vinyl-art" src="${artUrl}" alt="" onerror="this.src='${PLACEHOLDER}'">
       </div>`;
-    default:
-      return '';
+      // Start frame animation after DOM update
+      setTimeout(startReggieAnimation, 50);
+      break;
   }
+  return html;
 }
 
 function buildAnimPickerHTML(selected) {
