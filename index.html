@@ -49,8 +49,6 @@ input,select{font-family:inherit;color:inherit}
 .album-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,.3)}
 .album-card-art-wrap{position:relative;padding-top:100%;overflow:hidden}
 .album-card-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:var(--fg)}
-.album-card-vinyl{position:absolute;top:0;right:-60%;width:100%;height:100%;border-radius:50%;background:radial-gradient(circle at 50% 50%,var(--bg) 20%,#2a2520 21%,var(--bg) 22%,#2a2520 23%,#1c1814 30%,#2a2520 40%,var(--bg) 41%,#2a2520 42%,#1c1814 55%,#2a2520 70%,var(--bg) 71%,#2a2520 72%,#1c1814 85%,#2e2720 100%);transition:right .3s ease;opacity:.85}
-.album-card:hover .album-card-vinyl{right:-30%}
 .album-card-info{padding:10px 12px}
 .album-card-artist{font-size:13px;font-weight:700;color:var(--cream);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .album-card-album{font-size:11px;color:var(--cream-d);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -386,7 +384,7 @@ function renderGrid() {
   f.forEach(a => {
     const idx = albums.indexOf(a);
     const art = getArt(a.artist, a.album);
-    h += `<div class="album-card" onclick="openDetail(${idx})"><div class="album-card-art-wrap"><img class="album-card-art" src="${art}" alt="${a.artist} - ${a.album}" loading="lazy" crossorigin="anonymous" onerror="this.src='${PLACEHOLDER}'"><div class="album-card-vinyl"></div></div><div class="album-card-info"><div class="album-card-artist">${a.artist}</div><div class="album-card-album">${a.album}</div><div class="album-card-meta"><span style="color:var(--amber)">${a.dj}</span><span>${formatDate(a.date)}</span></div></div></div>`;
+    h += `<div class="album-card" onclick="openDetail(${idx})"><div class="album-card-art-wrap"><img class="album-card-art" src="${art}" alt="${a.artist} - ${a.album}" loading="lazy" crossorigin="anonymous" onerror="this.src='${PLACEHOLDER}'"></div><div class="album-card-info"><div class="album-card-artist">${a.artist}</div><div class="album-card-album">${a.album}</div><div class="album-card-meta"><span style="color:var(--amber)">${a.dj}</span><span>${formatDate(a.date)}</span></div></div></div>`;
   });
   h += '</div>';
   document.getElementById('content').innerHTML = h;
@@ -414,13 +412,13 @@ function renderStats() {
   const ma = ta[0]?.[1]||1, md = td[0]?.[1]||1, mg = tg[0]?.[1]||1;
   let h = '<div class="stats">';
   h += '<div class="stats-section"><div class="stats-title">DJ Leaderboard</div>';
-  td.forEach(([n,c]) => { h += `<div class="stats-bar-row"><div class="stats-bar-label">${n}</div><div class="stats-bar"><div class="stats-bar-fill" style="width:${(c/md*100).toFixed(0)}%;background:var(--amber)"><span class="stats-bar-count">${c}</span></div></div></div>`; });
+  td.forEach(([n,c]) => { h += `<div class="stats-bar-row"><div class="stats-bar-label">${n}</div><div class="stats-bar"><div class="stats-bar-fill" style="width:${(c/md*100).toFixed(0)}%;background:#4a7c59"><span class="stats-bar-count">${c}</span></div></div></div>`; });
   h += '</div>';
   h += '<div class="stats-section"><div class="stats-title">Most Played Artists</div>';
-  ta.forEach(([n,c]) => { h += `<div class="stats-bar-row"><div class="stats-bar-label">${n}</div><div class="stats-bar"><div class="stats-bar-fill" style="width:${(c/ma*100).toFixed(0)}%;background:var(--burnt)"><span class="stats-bar-count">${c}</span></div></div></div>`; });
+  ta.forEach(([n,c]) => { h += `<div class="stats-bar-row"><div class="stats-bar-label">${n}</div><div class="stats-bar"><div class="stats-bar-fill" style="width:${(c/ma*100).toFixed(0)}%;background:#c4a24e"><span class="stats-bar-count">${c}</span></div></div></div>`; });
   h += '</div>';
   h += '<div class="stats-section"><div class="stats-title">Genre Breakdown</div>';
-  tg.forEach(([n,c]) => { h += `<div class="stats-bar-row"><div class="stats-bar-label">${n}</div><div class="stats-bar"><div class="stats-bar-fill" style="width:${(c/mg*100).toFixed(0)}%;background:var(--amber-d)"><span class="stats-bar-count">${c}</span></div></div></div>`; });
+  tg.forEach(([n,c]) => { h += `<div class="stats-bar-row"><div class="stats-bar-label">${n}</div><div class="stats-bar"><div class="stats-bar-fill" style="width:${(c/mg*100).toFixed(0)}%;background:#5a8a8a"><span class="stats-bar-count">${c}</span></div></div></div>`; });
   h += '</div></div>';
   document.getElementById('content').innerHTML = h;
 }
