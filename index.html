@@ -8,93 +8,461 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#1a1612;--bg2:#13100d;--card:#241f1a;--card-h:#2e2720;--amber:#d4883a;--amber-l:#e8a85c;--amber-d:#a06828;--cream:#f2e8d5;--cream-d:#c4b69e;--burnt:#b85c2a;--wg:#6b5e52;--mg:#4a4038;--fg:#352f28}
-*{margin:0;padding:0;box-sizing:border-box}::selection{background:var(--amber);color:var(--bg)}body{background:var(--bg);color:var(--cream);font-family:'DM Sans',system-ui,sans-serif;line-height:1.5;min-height:100vh;overflow-x:hidden}button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}input{font-family:inherit;color:inherit}
-@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-.header{text-align:center;padding:40px 24px 32px;position:relative}.header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 20%,#d4883a06 0%,transparent 60%);pointer-events:none}.header h1{font-family:'Playfair Display',serif;font-size:44px;font-weight:900;font-style:italic;letter-spacing:-1.5px;line-height:1;color:var(--cream);margin-bottom:8px}.header p{font-size:14px;color:var(--wg);max-width:380px;margin:0 auto}.header-sub{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--amber);font-weight:500;margin-bottom:10px}
-.ribbon{display:flex;justify-content:center;gap:36px;padding:16px 24px;border-top:1px solid var(--fg);border-bottom:1px solid var(--fg);background:var(--bg2);flex-wrap:wrap}.ribbon-stat{text-align:center}.ribbon-num{font-size:20px;font-weight:900;color:var(--amber);font-variant-numeric:tabular-nums}.ribbon-label{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--wg);margin-top:1px}
-.controls{padding:10px 20px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;border-bottom:1px solid var(--fg);background:var(--bg)}.search-box{flex:1;min-width:180px;padding:7px 12px 7px 32px;border-radius:6px;border:1px solid var(--fg);background:var(--bg2);color:var(--cream);font-size:13px;outline:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236b5e52' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:10px center}.search-box:focus{border-color:var(--amber-d)}.search-box::placeholder{color:var(--wg)}.view-btn{padding:6px 12px;border-radius:6px;font-size:11px;font-weight:600;letter-spacing:.5px;color:var(--wg);transition:all .2s;text-transform:uppercase}.view-btn:hover{color:var(--cream-d)}.view-btn.active{background:var(--fg);color:var(--amber)}
-.filters{padding:8px 20px;display:flex;gap:5px;flex-wrap:wrap;border-bottom:1px solid var(--fg)}.filter-btn{padding:4px 12px;border-radius:20px;font-size:11px;color:var(--wg);border:1px solid transparent;transition:all .2s}.filter-btn:hover{color:var(--cream-d);border-color:var(--mg)}.filter-btn.active{background:var(--amber);color:var(--bg);font-weight:600;border-color:var(--amber)}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:14px;padding:20px}.album-card{background:var(--card);border-radius:8px;overflow:hidden;cursor:pointer;transition:transform .2s,box-shadow .2s;position:relative}.album-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,.3)}.album-card-art-wrap{position:relative;padding-top:100%;overflow:hidden}.album-card-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:var(--fg)}.album-card-vinyl{position:absolute;top:0;right:-60%;width:100%;height:100%;border-radius:50%;background:radial-gradient(circle at 50% 50%,var(--bg) 20%,#2a2520 21%,var(--bg) 22%,#2a2520 23%,#1c1814 30%,#2a2520 40%,var(--bg) 41%,#2a2520 42%,#1c1814 55%,#2a2520 70%,var(--bg) 71%,#2a2520 72%,#1c1814 85%,#2e2720 100%);transition:right .3s ease;opacity:.85}.album-card:hover .album-card-vinyl{right:-30%}.album-card-info{padding:10px 12px}.album-card-artist{font-size:13px;font-weight:700;color:var(--cream);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.album-card-album{font-size:11px;color:var(--cream-d);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.album-card-meta{font-size:10px;color:var(--wg);margin-top:4px;display:flex;justify-content:space-between}
-.list{padding:12px 20px}.list-row{display:flex;align-items:center;gap:14px;padding:10px 8px;border-bottom:1px solid var(--fg);cursor:pointer;transition:background .15s;border-radius:6px}.list-row:hover{background:var(--card)}.list-art{width:48px;height:48px;border-radius:4px;object-fit:cover;background:var(--fg);flex-shrink:0}.list-info{flex:1;min-width:0}.list-artist{font-size:14px;font-weight:700;color:var(--cream);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.list-album{font-size:12px;color:var(--cream-d);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.list-meta{font-size:11px;color:var(--wg);text-align:right;white-space:nowrap}.list-dj{color:var(--amber);font-weight:600}
-.stats{padding:20px}.stats-section{margin-bottom:28px}.stats-title{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--amber);margin-bottom:12px;font-weight:500}.stats-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:6px}.stats-bar-label{font-size:13px;color:var(--cream-d);width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.stats-bar{flex:1;height:20px;background:var(--fg);border-radius:4px;overflow:hidden;position:relative}.stats-bar-fill{height:100%;border-radius:4px;transition:width .6s ease;position:relative}.stats-bar-count{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:10px;font-weight:700;color:var(--bg)}
-.detail-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:150;display:none;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(4px)}.detail-overlay.open{display:flex}.detail-card{background:var(--card);border-radius:12px;max-width:400px;width:100%;border:1px solid var(--mg);box-shadow:0 24px 64px rgba(0,0,0,.5);animation:fadeIn .3s ease;overflow:hidden}.detail-art{width:100%;aspect-ratio:1;object-fit:cover;display:block}.detail-body{padding:20px 24px 24px}.detail-artist{font-family:'Playfair Display',serif;font-size:24px;font-weight:900;font-style:italic;margin-bottom:2px}.detail-album{font-size:15px;color:var(--cream-d);margin-bottom:14px}.detail-meta{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--wg)}.detail-meta strong{color:var(--cream-d);font-weight:600}.detail-meta .dj-name{color:var(--amber);font-weight:700}
+*{margin:0;padding:0;box-sizing:border-box}::selection{background:var(--amber);color:var(--bg)}
+body{background:var(--bg);color:var(--cream);font-family:'DM Sans',system-ui,sans-serif;line-height:1.5;min-height:100vh;overflow-x:hidden}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select{font-family:inherit;color:inherit}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+
+/* Header */
+.header{text-align:center;padding:40px 24px 32px;position:relative}
+.header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 20%,#d4883a06 0%,transparent 60%);pointer-events:none}
+.header h1{font-family:'Playfair Display',serif;font-size:44px;font-weight:900;font-style:italic;letter-spacing:-1.5px;line-height:1;color:var(--cream);margin-bottom:8px}
+.header p{font-size:14px;color:var(--wg);max-width:380px;margin:0 auto}
+.header-sub{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--amber);font-weight:500;margin-bottom:10px}
+
+/* Ribbon */
+.ribbon{display:flex;justify-content:center;gap:36px;padding:16px 24px;border-top:1px solid var(--fg);border-bottom:1px solid var(--fg);background:var(--bg2);flex-wrap:wrap}
+.ribbon-stat{text-align:center}.ribbon-num{font-size:20px;font-weight:900;color:var(--amber);font-variant-numeric:tabular-nums}
+.ribbon-label{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--wg);margin-top:1px}
+
+/* Controls bar */
+.controls{padding:10px 20px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;border-bottom:1px solid var(--fg);background:var(--bg)}
+.search-box{flex:1;min-width:160px;padding:7px 12px 7px 32px;border-radius:6px;border:1px solid var(--fg);background:var(--bg2);color:var(--cream);font-size:13px;outline:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236b5e52' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:10px center}
+.search-box:focus{border-color:var(--amber-d)}.search-box::placeholder{color:var(--wg)}
+.view-btn{padding:6px 12px;border-radius:6px;font-size:11px;font-weight:600;letter-spacing:.5px;color:var(--wg);transition:all .2s;text-transform:uppercase}
+.view-btn:hover{color:var(--cream-d)}.view-btn.active{background:var(--fg);color:var(--amber)}
+
+/* Filter bar */
+.filter-bar{padding:8px 20px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;border-bottom:1px solid var(--fg);background:var(--bg)}
+.filter-select{padding:6px 28px 6px 10px;border-radius:6px;border:1px solid var(--fg);background:var(--bg2);color:var(--cream-d);font-size:12px;outline:none;-webkit-appearance:none;appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%236b5e52' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center}
+.filter-select:focus{border-color:var(--amber-d)}
+.filter-select option{background:var(--bg2);color:var(--cream)}
+.clear-filters{padding:5px 12px;border-radius:6px;font-size:11px;font-weight:600;color:var(--amber);transition:all .2s;display:none}
+.clear-filters.visible{display:inline-flex;align-items:center;gap:4px}
+.clear-filters:hover{background:var(--fg);color:var(--amber-l)}
+
+/* Grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:14px;padding:20px}
+.album-card{background:var(--card);border-radius:8px;overflow:hidden;cursor:pointer;transition:transform .2s,box-shadow .2s;position:relative}
+.album-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.album-card-art-wrap{position:relative;padding-top:100%;overflow:hidden}
+.album-card-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:var(--fg)}
+.album-card-vinyl{position:absolute;top:0;right:-60%;width:100%;height:100%;border-radius:50%;background:radial-gradient(circle at 50% 50%,var(--bg) 20%,#2a2520 21%,var(--bg) 22%,#2a2520 23%,#1c1814 30%,#2a2520 40%,var(--bg) 41%,#2a2520 42%,#1c1814 55%,#2a2520 70%,var(--bg) 71%,#2a2520 72%,#1c1814 85%,#2e2720 100%);transition:right .3s ease;opacity:.85}
+.album-card:hover .album-card-vinyl{right:-30%}
+.album-card-info{padding:10px 12px}
+.album-card-artist{font-size:13px;font-weight:700;color:var(--cream);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.album-card-album{font-size:11px;color:var(--cream-d);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.album-card-meta{font-size:10px;color:var(--wg);margin-top:4px;display:flex;justify-content:space-between}
+
+/* List */
+.list{padding:12px 20px}
+.list-row{display:flex;align-items:center;gap:14px;padding:10px 8px;border-bottom:1px solid var(--fg);cursor:pointer;transition:background .15s;border-radius:6px}
+.list-row:hover{background:var(--card)}
+.list-art{width:48px;height:48px;border-radius:4px;object-fit:cover;background:var(--fg);flex-shrink:0}
+.list-info{flex:1;min-width:0}
+.list-artist{font-size:14px;font-weight:700;color:var(--cream);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.list-album{font-size:12px;color:var(--cream-d);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.list-meta{font-size:11px;color:var(--wg);text-align:right;white-space:nowrap}
+.list-dj{color:var(--amber);font-weight:600}
+
+/* Stats */
+.stats{padding:20px}.stats-section{margin-bottom:28px}
+.stats-title{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--amber);margin-bottom:12px;font-weight:500}
+.stats-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.stats-bar-label{font-size:13px;color:var(--cream-d);width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stats-bar{flex:1;height:20px;background:var(--fg);border-radius:4px;overflow:hidden;position:relative}
+.stats-bar-fill{height:100%;border-radius:4px;transition:width .6s ease;position:relative}
+.stats-bar-count{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:10px;font-weight:700;color:var(--bg)}
+
+/* Detail modal */
+.detail-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:150;display:none;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(4px)}
+.detail-overlay.open{display:flex}
+.detail-card{background:var(--card);border-radius:12px;max-width:400px;width:100%;border:1px solid var(--mg);box-shadow:0 24px 64px rgba(0,0,0,.5);animation:fadeIn .3s ease;overflow:hidden}
+.detail-art{width:100%;aspect-ratio:1;object-fit:cover;display:block}
+.detail-body{padding:20px 24px 24px}
+.detail-artist{font-family:'Playfair Display',serif;font-size:24px;font-weight:900;font-style:italic;margin-bottom:2px}
+.detail-album{font-size:15px;color:var(--cream-d);margin-bottom:14px}
+.detail-meta{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--wg)}
+.detail-meta strong{color:var(--cream-d);font-weight:600}
+.detail-meta .dj-name{color:var(--amber);font-weight:700}
+
 .setup-banner{padding:12px 20px;background:var(--amber-d);color:var(--cream);font-size:13px;text-align:center;display:none}
-.footer{text-align:center;padding:40px 24px;border-top:1px solid var(--fg);color:var(--wg);font-size:11px;line-height:1.8}.footer strong{color:var(--cream-d);font-weight:600}
-.loading{text-align:center;padding:60px 24px;color:var(--wg);font-size:14px}.loading-spinner{width:32px;height:32px;border:3px solid var(--fg);border-top-color:var(--amber);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px}
-@media(max-width:600px){.header h1{font-size:32px}.grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;padding:14px}.ribbon{gap:20px}}
+.footer{text-align:center;padding:40px 24px;border-top:1px solid var(--fg);color:var(--wg);font-size:11px;line-height:1.8}
+.footer strong{color:var(--cream-d);font-weight:600}
+.loading{text-align:center;padding:60px 24px;color:var(--wg);font-size:14px}
+.loading-spinner{width:32px;height:32px;border:3px solid var(--fg);border-top-color:var(--amber);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px}
+
+@media(max-width:600px){
+  .header h1{font-size:32px}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;padding:14px}
+  .ribbon{gap:20px}
+  .filter-bar{gap:6px}
+  .filter-select{font-size:11px;padding:5px 24px 5px 8px;flex:1;min-width:0}
+}
 </style>
 </head>
 <body>
+
 <div class="setup-banner" id="setupBanner">⚠️ Google Sheets not connected — running with sample data.</div>
-<div class="header"><div class="header-sub">Terranaut Beer ✦ Bend, Oregon</div><h1>The Vinyl Wall</h1><p>Every album ever spun at Wednesday vinyl night. Searchable. Browsable. Permanent.</p></div>
+
+<div class="header">
+  <div class="header-sub">Terranaut Beer ✦ Bend, Oregon</div>
+  <h1>The Vinyl Wall</h1>
+  <p>Every album ever spun at Wednesday vinyl night. Searchable. Browsable. Permanent.</p>
+</div>
+
 <div class="ribbon" id="ribbon"></div>
-<div class="controls"><input type="text" class="search-box" id="searchBox" placeholder="Search artist, album, genre, or DJ..."><button class="view-btn active" id="gridBtn" onclick="setView('grid')">Grid</button><button class="view-btn" id="listBtn" onclick="setView('list')">List</button><button class="view-btn" id="statsBtn" onclick="setView('stats')">Stats</button></div>
-<div class="filters" id="filters"></div>
+
+<div class="controls">
+  <input type="text" class="search-box" id="searchBox" placeholder="Search artist, album, genre, or DJ...">
+  <button class="view-btn active" id="gridBtn" onclick="setView('grid')">Grid</button>
+  <button class="view-btn" id="listBtn" onclick="setView('list')">List</button>
+  <button class="view-btn" id="statsBtn" onclick="setView('stats')">Stats</button>
+</div>
+
+<div class="filter-bar" id="filterBar">
+  <select class="filter-select" id="filterGenre" onchange="applyFilters()">
+    <option value="">All Genres</option>
+  </select>
+  <select class="filter-select" id="filterDJ" onchange="applyFilters()">
+    <option value="">All DJs</option>
+  </select>
+  <select class="filter-select" id="filterNight" onchange="applyFilters()">
+    <option value="">All Vinyl Nights</option>
+  </select>
+  <select class="filter-select" id="sortSelect" onchange="applyFilters()">
+    <option value="newest">Newest First</option>
+    <option value="oldest">Oldest First</option>
+    <option value="artist-az">Artist A–Z</option>
+    <option value="artist-za">Artist Z–A</option>
+    <option value="dj">By DJ</option>
+  </select>
+  <button class="clear-filters" id="clearBtn" onclick="clearAllFilters()">✕ Clear</button>
+</div>
+
 <div id="content"><div class="loading"><div class="loading-spinner"></div>Loading the collection...</div></div>
+
 <div class="footer"><strong>Terranaut Beer</strong><br>20750 High Desert Lane, Bend, Oregon<br>Vinyl Night — Every Wednesday</div>
-<div class="detail-overlay" id="detailOverlay" onclick="closeDetail()"><div class="detail-card" onclick="event.stopPropagation()"><img class="detail-art" id="detailArt" src="" alt=""><div class="detail-body"><div class="detail-artist" id="detailArtist"></div><div class="detail-album" id="detailAlbum"></div><div class="detail-meta" id="detailMeta"></div></div></div></div>
+
+<div class="detail-overlay" id="detailOverlay" onclick="closeDetail()">
+  <div class="detail-card" onclick="event.stopPropagation()">
+    <img class="detail-art" id="detailArt" src="" alt="">
+    <div class="detail-body">
+      <div class="detail-artist" id="detailArtist"></div>
+      <div class="detail-album" id="detailAlbum"></div>
+      <div class="detail-meta" id="detailMeta"></div>
+    </div>
+  </div>
+</div>
+
 <script>
-const SHEETS_API_URL='https://script.google.com/macros/s/AKfycbws73W9aRh1kKAGvVMz3_MDIVkobu8QAPnO3zUqEo-0uDNC2-9LMPkob6RTsEXhuodQ/exec';
-const PLACEHOLDER="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect fill='%23352f28' width='200' height='200'/%3E%3Ccircle cx='100' cy='90' r='28' fill='none' stroke='%236b5e52' stroke-width='2'/%3E%3Cpath d='M92 82 v16 l14-8z' fill='%236b5e52'/%3E%3Ctext x='100' y='140' text-anchor='middle' fill='%236b5e52' font-family='sans-serif' font-size='11'%3ENo Art Found%3C/text%3E%3C/svg%3E";
-const SAMPLE_ALBUMS=[
-{artist:"Fleetwood Mac",album:"Rumours",genre:"Classic Rock",dj:"Katie",date:"2025-04-09"},
-{artist:"Khruangbin",album:"Con Todo El Mundo",genre:"Psych Rock",dj:"Bryon",date:"2025-04-09"},
-{artist:"Tame Impala",album:"Currents",genre:"Psych Rock",dj:"Micah",date:"2025-04-09"},
-{artist:"Talking Heads",album:"Remain in Light",genre:"Post-Punk",dj:"Caleb",date:"2025-04-09"},
-{artist:"Pink Floyd",album:"Wish You Were Here",genre:"Classic Rock",dj:"Pete",date:"2025-04-02"},
-{artist:"Stevie Wonder",album:"Songs in the Key of Life",genre:"Soul / R&B",dj:"Melissa",date:"2025-04-02"},
-{artist:"The War on Drugs",album:"Lost in the Dream",genre:"Indie",dj:"Micah",date:"2025-04-02"},
-{artist:"Led Zeppelin",album:"Led Zeppelin IV",genre:"Classic Rock",dj:"John",date:"2025-04-02"},
-{artist:"Radiohead",album:"OK Computer",genre:"Alternative",dj:"Bryon",date:"2025-03-26"},
-{artist:"Miles Davis",album:"Kind of Blue",genre:"Jazz",dj:"Wiggles",date:"2025-03-26"},
-{artist:"King Gizzard & The Lizard Wizard",album:"Nonagon Infinity",genre:"Psych Rock",dj:"Bryon",date:"2025-03-26"},
-{artist:"Grateful Dead",album:"American Beauty",genre:"Folk",dj:"Pete",date:"2025-03-26"},
-{artist:"David Bowie",album:"The Rise and Fall of Ziggy Stardust",genre:"Rock",dj:"Katie",date:"2025-03-19"},
-{artist:"Sade",album:"Diamond Life",genre:"Soul / R&B",dj:"Melissa",date:"2025-03-19"},
-{artist:"Mac DeMarco",album:"Salad Days",genre:"Indie",dj:"Caleb",date:"2025-03-19"},
-{artist:"Black Sabbath",album:"Paranoid",genre:"Metal",dj:"John",date:"2025-03-19"},
-{artist:"Wilco",album:"Yankee Hotel Foxtrot",genre:"Alternative",dj:"Micah",date:"2025-03-12"},
-{artist:"Al Green",album:"Let's Stay Together",genre:"Soul / R&B",dj:"Wiggles",date:"2025-03-12"},
-{artist:"Pond",album:"The Weather",genre:"Psych Rock",dj:"Bryon",date:"2025-03-12"},
-{artist:"Joni Mitchell",album:"Blue",genre:"Folk",dj:"Katie",date:"2025-03-12"},
-{artist:"Queens of the Stone Age",album:"Songs for the Deaf",genre:"Rock",dj:"Caleb",date:"2025-03-05"},
-{artist:"Curtis Mayfield",album:"Superfly",genre:"Funk",dj:"Wiggles",date:"2025-03-05"},
-{artist:"Tycho",album:"Dive",genre:"Electronic",dj:"Micah",date:"2025-03-05"},
-{artist:"Neil Young",album:"After the Gold Rush",genre:"Folk",dj:"Pete",date:"2025-03-05"},
-{artist:"The Stooges",album:"Fun House",genre:"Punk",dj:"John",date:"2025-02-26"},
-{artist:"Melody's Echo Chamber",album:"Bon Voyage",genre:"Psych Rock",dj:"Bryon",date:"2025-02-26"},
-{artist:"Amy Winehouse",album:"Back to Black",genre:"Soul / R&B",dj:"Melissa",date:"2025-02-26"},
-{artist:"Television",album:"Marquee Moon",genre:"Post-Punk",dj:"Caleb",date:"2025-02-26"},
-{artist:"Funkadelic",album:"Maggot Brain",genre:"Funk",dj:"Wiggles",date:"2025-02-19"},
-{artist:"Lord Huron",album:"Strange Trails",genre:"Indie",dj:"Micah",date:"2025-02-19"},
-{artist:"Dolly Parton",album:"Jolene",genre:"Country",dj:"Katie",date:"2025-02-19"},
-{artist:"The Doors",album:"L.A. Woman",genre:"Classic Rock",dj:"Pete",date:"2025-02-19"},
+const SHEETS_API_URL = 'https://script.google.com/macros/s/AKfycbws73W9aRh1kKAGvVMz3_MDIVkobu8QAPnO3zUqEo-0uDNC2-9LMPkob6RTsEXhuodQ/exec';
+const PLACEHOLDER = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect fill='%23352f28' width='200' height='200'/%3E%3Ccircle cx='100' cy='90' r='28' fill='none' stroke='%236b5e52' stroke-width='2'/%3E%3Cpath d='M92 82 v16 l14-8z' fill='%236b5e52'/%3E%3Ctext x='100' y='140' text-anchor='middle' fill='%236b5e52' font-family='sans-serif' font-size='11'%3ENo Art Found%3C/text%3E%3C/svg%3E";
+
+const SAMPLE_ALBUMS = [
+  {artist:"Fleetwood Mac",album:"Rumours",genre:"Classic Rock",dj:"Katie",date:"2025-04-09"},
+  {artist:"Khruangbin",album:"Con Todo El Mundo",genre:"Psych Rock",dj:"Bryon",date:"2025-04-09"},
+  {artist:"Tame Impala",album:"Currents",genre:"Psych Rock",dj:"Micah",date:"2025-04-09"},
+  {artist:"Talking Heads",album:"Remain in Light",genre:"Post-Punk",dj:"Caleb",date:"2025-04-09"},
+  {artist:"Pink Floyd",album:"Wish You Were Here",genre:"Classic Rock",dj:"Pete",date:"2025-04-02"},
+  {artist:"Stevie Wonder",album:"Songs in the Key of Life",genre:"Soul / R&B",dj:"Melissa",date:"2025-04-02"},
+  {artist:"The War on Drugs",album:"Lost in the Dream",genre:"Indie",dj:"Micah",date:"2025-04-02"},
+  {artist:"Led Zeppelin",album:"Led Zeppelin IV",genre:"Classic Rock",dj:"John",date:"2025-04-02"},
+  {artist:"Radiohead",album:"OK Computer",genre:"Alternative",dj:"Bryon",date:"2025-03-26"},
+  {artist:"Miles Davis",album:"Kind of Blue",genre:"Jazz",dj:"Wiggles",date:"2025-03-26"},
+  {artist:"King Gizzard & The Lizard Wizard",album:"Nonagon Infinity",genre:"Psych Rock",dj:"Bryon",date:"2025-03-26"},
+  {artist:"Grateful Dead",album:"American Beauty",genre:"Folk",dj:"Pete",date:"2025-03-26"},
+  {artist:"David Bowie",album:"The Rise and Fall of Ziggy Stardust",genre:"Rock",dj:"Katie",date:"2025-03-19"},
+  {artist:"Sade",album:"Diamond Life",genre:"Soul / R&B",dj:"Melissa",date:"2025-03-19"},
+  {artist:"Mac DeMarco",album:"Salad Days",genre:"Indie",dj:"Caleb",date:"2025-03-19"},
+  {artist:"Black Sabbath",album:"Paranoid",genre:"Metal",dj:"John",date:"2025-03-19"},
+  {artist:"Wilco",album:"Yankee Hotel Foxtrot",genre:"Alternative",dj:"Micah",date:"2025-03-12"},
+  {artist:"Al Green",album:"Let's Stay Together",genre:"Soul / R&B",dj:"Wiggles",date:"2025-03-12"},
+  {artist:"Pond",album:"The Weather",genre:"Psych Rock",dj:"Bryon",date:"2025-03-12"},
+  {artist:"Joni Mitchell",album:"Blue",genre:"Folk",dj:"Katie",date:"2025-03-12"},
+  {artist:"Queens of the Stone Age",album:"Songs for the Deaf",genre:"Rock",dj:"Caleb",date:"2025-03-05"},
+  {artist:"Curtis Mayfield",album:"Superfly",genre:"Funk",dj:"Wiggles",date:"2025-03-05"},
+  {artist:"Tycho",album:"Dive",genre:"Electronic",dj:"Micah",date:"2025-03-05"},
+  {artist:"Neil Young",album:"After the Gold Rush",genre:"Folk",dj:"Pete",date:"2025-03-05"},
+  {artist:"The Stooges",album:"Fun House",genre:"Punk",dj:"John",date:"2025-02-26"},
+  {artist:"Melody's Echo Chamber",album:"Bon Voyage",genre:"Psych Rock",dj:"Bryon",date:"2025-02-26"},
+  {artist:"Amy Winehouse",album:"Back to Black",genre:"Soul / R&B",dj:"Melissa",date:"2025-02-26"},
+  {artist:"Television",album:"Marquee Moon",genre:"Post-Punk",dj:"Caleb",date:"2025-02-26"},
+  {artist:"Funkadelic",album:"Maggot Brain",genre:"Funk",dj:"Wiggles",date:"2025-02-19"},
+  {artist:"Lord Huron",album:"Strange Trails",genre:"Indie",dj:"Micah",date:"2025-02-19"},
+  {artist:"Dolly Parton",album:"Jolene",genre:"Country",dj:"Katie",date:"2025-02-19"},
+  {artist:"The Doors",album:"L.A. Woman",genre:"Classic Rock",dj:"Pete",date:"2025-02-19"},
 ];
-let albums=[],artCache={},currentView='grid',activeGenre=null,searchQuery='',usingSampleData=false;
-document.addEventListener('DOMContentLoaded',init);
-async function init(){
-  if(SHEETS_API_URL){try{const res=await fetch(SHEETS_API_URL);const data=await res.json();albums=data.albums||[];albums.forEach(a=>{if(a.artUrl)artCache[`${a.artist}|||${a.album}`]=a.artUrl})}catch(e){loadSampleData()}}else{loadSampleData()}
-  renderWall();fetchAllArt();setupSearch();
+
+let albums = [];
+let artCache = {};
+let currentView = 'grid';
+let searchQuery = '';
+let usingSampleData = false;
+
+document.addEventListener('DOMContentLoaded', init);
+
+async function init() {
+  if (SHEETS_API_URL) {
+    try {
+      const res = await fetch(SHEETS_API_URL);
+      const data = await res.json();
+      albums = data.albums || [];
+      albums.forEach(a => { if (a.artUrl) artCache[`${a.artist}|||${a.album}`] = a.artUrl; });
+    } catch(e) { loadSampleData(); }
+  } else { loadSampleData(); }
+
+  populateFilterDropdowns();
+  renderRibbon();
+  renderCurrentView();
+  fetchAllArt();
+  setupSearch();
 }
-function loadSampleData(){usingSampleData=true;albums=SAMPLE_ALBUMS.map((a,i)=>({...a,id:i}));document.getElementById('setupBanner').style.display='block'}
-async function fetchArt(artist,album){const key=`${artist}|||${album}`;if(artCache[key])return artCache[key];try{const q=encodeURIComponent(`${artist} ${album}`);const res=await fetch(`https://itunes.apple.com/search?term=${q}&media=music&entity=album&limit=5`);const data=await res.json();if(data.results?.length>0){const al=artist.toLowerCase();const m=data.results.find(r=>r.artistName.toLowerCase().includes(al))||data.results[0];const url=m.artworkUrl100.replace('100x100','400x400').replace('http://','https://');artCache[key]=url;return url}}catch(e){}artCache[key]=PLACEHOLDER;return PLACEHOLDER}
-async function fetchAllArt(){for(let i=0;i<albums.length;i+=8){const batch=albums.slice(i,i+8);await Promise.all(batch.map(a=>fetchArt(a.artist,a.album)));renderCurrentView()}}
-function getArt(artist,album){return artCache[`${artist}|||${album}`]||PLACEHOLDER}
-function renderWall(){renderRibbon();renderFilters();renderCurrentView()}
-function renderRibbon(){const ua=new Set(albums.map(a=>a.artist)).size;const ug=new Set(albums.map(a=>a.genre)).size;const n=new Set(albums.map(a=>a.date)).size;document.getElementById('ribbon').innerHTML=`<div class="ribbon-stat"><div class="ribbon-num">${albums.length}</div><div class="ribbon-label">Albums</div></div><div class="ribbon-stat"><div class="ribbon-num">${ua}</div><div class="ribbon-label">Artists</div></div><div class="ribbon-stat"><div class="ribbon-num">${ug}</div><div class="ribbon-label">Genres</div></div><div class="ribbon-stat"><div class="ribbon-num">${n}</div><div class="ribbon-label">Vinyl Nights</div></div>`}
-function renderFilters(){const g={};albums.forEach(a=>{g[a.genre]=(g[a.genre]||0)+1});const s=Object.entries(g).sort((a,b)=>b[1]-a[1]);let h=`<button class="filter-btn ${!activeGenre?'active':''}" onclick="setGenre(null)">All</button>`;s.forEach(([n,c])=>{h+=`<button class="filter-btn ${activeGenre===n?'active':''}" onclick="setGenre('${n.replace(/'/g,"\\'")}')">${n} (${c})</button>`});document.getElementById('filters').innerHTML=h}
-function setGenre(g){activeGenre=g;renderFilters();renderCurrentView()}
-function getFilteredAlbums(){let f=[...albums];if(activeGenre)f=f.filter(a=>a.genre===activeGenre);if(searchQuery){const q=searchQuery.toLowerCase();f=f.filter(a=>a.artist.toLowerCase().includes(q)||a.album.toLowerCase().includes(q)||a.genre.toLowerCase().includes(q)||a.dj.toLowerCase().includes(q))}return f}
-function setView(v){currentView=v;document.querySelectorAll('.view-btn').forEach(b=>b.classList.remove('active'));document.getElementById(v==='grid'?'gridBtn':v==='list'?'listBtn':'statsBtn').classList.add('active');renderCurrentView()}
-function renderCurrentView(){if(currentView==='grid')renderGrid();else if(currentView==='list')renderList();else renderStats()}
-function renderGrid(){const f=getFilteredAlbums();if(!f.length){document.getElementById('content').innerHTML=`<div class="loading" style="color:var(--wg)">No albums found</div>`;return}let h='<div class="grid">';f.forEach(a=>{const idx=albums.indexOf(a);const art=getArt(a.artist,a.album);h+=`<div class="album-card" onclick="openDetail(${idx})"><div class="album-card-art-wrap"><img class="album-card-art" src="${art}" alt="${a.artist} - ${a.album}" loading="lazy" crossorigin="anonymous" onerror="this.src='${PLACEHOLDER}'"><div class="album-card-vinyl"></div></div><div class="album-card-info"><div class="album-card-artist">${a.artist}</div><div class="album-card-album">${a.album}</div><div class="album-card-meta"><span style="color:var(--amber)">${a.dj}</span><span>${formatDate(a.date)}</span></div></div></div>`});h+='</div>';document.getElementById('content').innerHTML=h}
-function renderList(){const f=getFilteredAlbums();if(!f.length){document.getElementById('content').innerHTML=`<div class="loading" style="color:var(--wg)">No albums found</div>`;return}let h='<div class="list">';f.forEach(a=>{const idx=albums.indexOf(a);const art=getArt(a.artist,a.album);h+=`<div class="list-row" onclick="openDetail(${idx})"><img class="list-art" src="${art}" alt="" loading="lazy" crossorigin="anonymous" onerror="this.src='${PLACEHOLDER}'"><div class="list-info"><div class="list-artist">${a.artist}</div><div class="list-album">${a.album}</div></div><div class="list-meta"><div class="list-dj">${a.dj}</div><div>${formatDate(a.date)}</div></div></div>`});h+='</div>';document.getElementById('content').innerHTML=h}
-function renderStats(){const ba={},bd={},bg={};albums.forEach(a=>{ba[a.artist]=(ba[a.artist]||0)+1;bd[a.dj]=(bd[a.dj]||0)+1;bg[a.genre]=(bg[a.genre]||0)+1});const ta=Object.entries(ba).sort((a,b)=>b[1]-a[1]).slice(0,8);const td=Object.entries(bd).sort((a,b)=>b[1]-a[1]);const tg=Object.entries(bg).sort((a,b)=>b[1]-a[1]);const ma=ta[0]?.[1]||1;const md=td[0]?.[1]||1;const mg=tg[0]?.[1]||1;let h='<div class="stats">';h+='<div class="stats-section"><div class="stats-title">DJ Leaderboard</div>';td.forEach(([n,c])=>{h+=`<div class="stats-bar-row"><div class="stats-bar-label">${n}</div><div class="stats-bar"><div class="stats-bar-fill" style="width:${(c/md*100).toFixed(0)}%;background:var(--amber)"><span class="stats-bar-count">${c}</span></div></div></div>`});h+='</div>';h+='<div class="stats-section"><div class="stats-title">Most Played Artists</div>';ta.forEach(([n,c])=>{h+=`<div class="stats-bar-row"><div class="stats-bar-label">${n}</div><div class="stats-bar"><div class="stats-bar-fill" style="width:${(c/ma*100).toFixed(0)}%;background:var(--burnt)"><span class="stats-bar-count">${c}</span></div></div></div>`});h+='</div>';h+='<div class="stats-section"><div class="stats-title">Genre Breakdown</div>';tg.forEach(([n,c])=>{h+=`<div class="stats-bar-row"><div class="stats-bar-label">${n}</div><div class="stats-bar"><div class="stats-bar-fill" style="width:${(c/mg*100).toFixed(0)}%;background:var(--amber-d)"><span class="stats-bar-count">${c}</span></div></div></div>`});h+='</div></div>';document.getElementById('content').innerHTML=h}
-function openDetail(idx){const a=albums[idx];const art=getArt(a.artist,a.album);document.getElementById('detailArt').src=art;document.getElementById('detailArtist').textContent=a.artist;document.getElementById('detailAlbum').textContent=a.album;document.getElementById('detailMeta').innerHTML=`<span>Brought by <span class="dj-name">${a.dj}</span></span><span>Played <strong>${formatDate(a.date)}</strong></span><span>${a.genre}</span>`;document.getElementById('detailOverlay').classList.add('open')}
-function closeDetail(){document.getElementById('detailOverlay').classList.remove('open')}
-function setupSearch(){let d;document.getElementById('searchBox').addEventListener('input',e=>{clearTimeout(d);d=setTimeout(()=>{searchQuery=e.target.value.trim();renderCurrentView()},200)})}
-function formatDate(d){return new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDetail()});
+
+function loadSampleData() {
+  usingSampleData = true;
+  albums = SAMPLE_ALBUMS.map((a, i) => ({ ...a, id: i }));
+  document.getElementById('setupBanner').style.display = 'block';
+}
+
+// ═══════════════════════════════════════
+//  ART FETCHER
+// ═══════════════════════════════════════
+async function fetchArt(artist, album) {
+  const key = `${artist}|||${album}`;
+  if (artCache[key]) return artCache[key];
+  try {
+    const q = encodeURIComponent(`${artist} ${album}`);
+    const res = await fetch(`https://itunes.apple.com/search?term=${q}&media=music&entity=album&limit=5`);
+    const data = await res.json();
+    if (data.results?.length > 0) {
+      const al = artist.toLowerCase();
+      const m = data.results.find(r => r.artistName.toLowerCase().includes(al)) || data.results[0];
+      const url = m.artworkUrl100.replace('100x100', '400x400').replace('http://', 'https://');
+      artCache[key] = url;
+      return url;
+    }
+  } catch(e) {}
+  artCache[key] = PLACEHOLDER;
+  return PLACEHOLDER;
+}
+
+async function fetchAllArt() {
+  for (let i = 0; i < albums.length; i += 8) {
+    const batch = albums.slice(i, i + 8);
+    await Promise.all(batch.map(a => fetchArt(a.artist, a.album)));
+    renderCurrentView();
+  }
+}
+
+function getArt(artist, album) {
+  return artCache[`${artist}|||${album}`] || PLACEHOLDER;
+}
+
+// ═══════════════════════════════════════
+//  FILTER DROPDOWNS
+// ═══════════════════════════════════════
+function populateFilterDropdowns() {
+  // Genres — sorted by count descending
+  const genres = {};
+  albums.forEach(a => { genres[a.genre] = (genres[a.genre]||0) + 1; });
+  const genresSorted = Object.entries(genres).sort((a,b) => b[1] - a[1]);
+  const genreSelect = document.getElementById('filterGenre');
+  genreSelect.innerHTML = '<option value="">All Genres</option>';
+  genresSorted.forEach(([g, c]) => {
+    genreSelect.innerHTML += `<option value="${g}">${g} (${c})</option>`;
+  });
+
+  // DJs — sorted alphabetically
+  const djs = [...new Set(albums.map(a => a.dj))].sort();
+  const djSelect = document.getElementById('filterDJ');
+  djSelect.innerHTML = '<option value="">All DJs</option>';
+  djs.forEach(dj => {
+    const count = albums.filter(a => a.dj === dj).length;
+    djSelect.innerHTML += `<option value="${dj}">${dj} (${count})</option>`;
+  });
+
+  // Vinyl Nights — sorted newest first
+  const nights = [...new Set(albums.map(a => a.date))].sort((a,b) => b.localeCompare(a));
+  const nightSelect = document.getElementById('filterNight');
+  nightSelect.innerHTML = '<option value="">All Vinyl Nights</option>';
+  nights.forEach(d => {
+    const count = albums.filter(a => a.date === d).length;
+    nightSelect.innerHTML += `<option value="${d}">${formatDate(d)} (${count} albums)</option>`;
+  });
+}
+
+function applyFilters() {
+  updateClearButton();
+  renderCurrentView();
+}
+
+function clearAllFilters() {
+  document.getElementById('filterGenre').value = '';
+  document.getElementById('filterDJ').value = '';
+  document.getElementById('filterNight').value = '';
+  document.getElementById('sortSelect').value = 'newest';
+  document.getElementById('searchBox').value = '';
+  searchQuery = '';
+  updateClearButton();
+  renderCurrentView();
+}
+
+function updateClearButton() {
+  const genre = document.getElementById('filterGenre').value;
+  const dj = document.getElementById('filterDJ').value;
+  const night = document.getElementById('filterNight').value;
+  const sort = document.getElementById('sortSelect').value;
+  const hasFilters = genre || dj || night || sort !== 'newest' || searchQuery;
+  document.getElementById('clearBtn').classList.toggle('visible', !!hasFilters);
+}
+
+function getFilteredAlbums() {
+  const genre = document.getElementById('filterGenre').value;
+  const dj = document.getElementById('filterDJ').value;
+  const night = document.getElementById('filterNight').value;
+  const sort = document.getElementById('sortSelect').value;
+
+  let filtered = [...albums];
+  if (genre) filtered = filtered.filter(a => a.genre === genre);
+  if (dj) filtered = filtered.filter(a => a.dj === dj);
+  if (night) filtered = filtered.filter(a => a.date === night);
+  if (searchQuery) {
+    const q = searchQuery.toLowerCase();
+    filtered = filtered.filter(a =>
+      a.artist.toLowerCase().includes(q) ||
+      a.album.toLowerCase().includes(q) ||
+      a.genre.toLowerCase().includes(q) ||
+      a.dj.toLowerCase().includes(q)
+    );
+  }
+
+  // Sort
+  switch(sort) {
+    case 'newest': filtered.sort((a,b) => b.date.localeCompare(a.date)); break;
+    case 'oldest': filtered.sort((a,b) => a.date.localeCompare(b.date)); break;
+    case 'artist-az': filtered.sort((a,b) => a.artist.localeCompare(b.artist)); break;
+    case 'artist-za': filtered.sort((a,b) => b.artist.localeCompare(a.artist)); break;
+    case 'dj': filtered.sort((a,b) => a.dj.localeCompare(b.dj) || b.date.localeCompare(a.date)); break;
+  }
+
+  return filtered;
+}
+
+// ═══════════════════════════════════════
+//  RENDERING
+// ═══════════════════════════════════════
+function renderRibbon() {
+  const ua = new Set(albums.map(a => a.artist)).size;
+  const ug = new Set(albums.map(a => a.genre)).size;
+  const n = new Set(albums.map(a => a.date)).size;
+  document.getElementById('ribbon').innerHTML = `
+    <div class="ribbon-stat"><div class="ribbon-num">${albums.length}</div><div class="ribbon-label">Albums</div></div>
+    <div class="ribbon-stat"><div class="ribbon-num">${ua}</div><div class="ribbon-label">Artists</div></div>
+    <div class="ribbon-stat"><div class="ribbon-num">${ug}</div><div class="ribbon-label">Genres</div></div>
+    <div class="ribbon-stat"><div class="ribbon-num">${n}</div><div class="ribbon-label">Vinyl Nights</div></div>
+  `;
+}
+
+function setView(v) {
+  currentView = v;
+  document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(v === 'grid' ? 'gridBtn' : v === 'list' ? 'listBtn' : 'statsBtn').classList.add('active');
+  renderCurrentView();
+}
+
+function renderCurrentView() {
+  if (currentView === 'grid') renderGrid();
+  else if (currentView === 'list') renderList();
+  else renderStats();
+}
+
+function renderGrid() {
+  const f = getFilteredAlbums();
+  if (!f.length) { document.getElementById('content').innerHTML = '<div class="loading" style="color:var(--wg)">No albums match your filters</div>'; return; }
+  let h = '<div class="grid">';
+  f.forEach(a => {
+    const idx = albums.indexOf(a);
+    const art = getArt(a.artist, a.album);
+    h += `<div class="album-card" onclick="openDetail(${idx})"><div class="album-card-art-wrap"><img class="album-card-art" src="${art}" alt="${a.artist} - ${a.album}" loading="lazy" crossorigin="anonymous" onerror="this.src='${PLACEHOLDER}'"><div class="album-card-vinyl"></div></div><div class="album-card-info"><div class="album-card-artist">${a.artist}</div><div class="album-card-album">${a.album}</div><div class="album-card-meta"><span style="color:var(--amber)">${a.dj}</span><span>${formatDate(a.date)}</span></div></div></div>`;
+  });
+  h += '</div>';
+  document.getElementById('content').innerHTML = h;
+}
+
+function renderList() {
+  const f = getFilteredAlbums();
+  if (!f.length) { document.getElementById('content').innerHTML = '<div class="loading" style="color:var(--wg)">No albums match your filters</div>'; return; }
+  let h = '<div class="list">';
+  f.forEach(a => {
+    const idx = albums.indexOf(a);
+    const art = getArt(a.artist, a.album);
+    h += `<div class="list-row" onclick="openDetail(${idx})"><img class="list-art" src="${art}" alt="" loading="lazy" crossorigin="anonymous" onerror="this.src='${PLACEHOLDER}'"><div class="list-info"><div class="list-artist">${a.artist}</div><div class="list-album">${a.album}</div></div><div class="list-meta"><div class="list-dj">${a.dj}</div><div>${formatDate(a.date)}</div></div></div>`;
+  });
+  h += '</div>';
+  document.getElementById('content').innerHTML = h;
+}
+
+function renderStats() {
+  const ba = {}, bd = {}, bg = {};
+  albums.forEach(a => { ba[a.artist] = (ba[a.artist]||0)+1; bd[a.dj] = (bd[a.dj]||0)+1; bg[a.genre] = (bg[a.genre]||0)+1; });
+  const ta = Object.entries(ba).sort((a,b) => b[1]-a[1]).slice(0,8);
+  const td = Object.entries(bd).sort((a,b) => b[1]-a[1]);
+  const tg = Object.entries(bg).sort((a,b) => b[1]-a[1]);
+  const ma = ta[0]?.[1]||1, md = td[0]?.[1]||1, mg = tg[0]?.[1]||1;
+  let h = '<div class="stats">';
+  h += '<div class="stats-section"><div class="stats-title">DJ Leaderboard</div>';
+  td.forEach(([n,c]) => { h += `<div class="stats-bar-row"><div class="stats-bar-label">${n}</div><div class="stats-bar"><div class="stats-bar-fill" style="width:${(c/md*100).toFixed(0)}%;background:var(--amber)"><span class="stats-bar-count">${c}</span></div></div></div>`; });
+  h += '</div>';
+  h += '<div class="stats-section"><div class="stats-title">Most Played Artists</div>';
+  ta.forEach(([n,c]) => { h += `<div class="stats-bar-row"><div class="stats-bar-label">${n}</div><div class="stats-bar"><div class="stats-bar-fill" style="width:${(c/ma*100).toFixed(0)}%;background:var(--burnt)"><span class="stats-bar-count">${c}</span></div></div></div>`; });
+  h += '</div>';
+  h += '<div class="stats-section"><div class="stats-title">Genre Breakdown</div>';
+  tg.forEach(([n,c]) => { h += `<div class="stats-bar-row"><div class="stats-bar-label">${n}</div><div class="stats-bar"><div class="stats-bar-fill" style="width:${(c/mg*100).toFixed(0)}%;background:var(--amber-d)"><span class="stats-bar-count">${c}</span></div></div></div>`; });
+  h += '</div></div>';
+  document.getElementById('content').innerHTML = h;
+}
+
+// ═══════════════════════════════════════
+//  DETAIL + SEARCH + UTILS
+// ═══════════════════════════════════════
+function openDetail(idx) {
+  const a = albums[idx];
+  const art = getArt(a.artist, a.album);
+  document.getElementById('detailArt').src = art;
+  document.getElementById('detailArtist').textContent = a.artist;
+  document.getElementById('detailAlbum').textContent = a.album;
+  document.getElementById('detailMeta').innerHTML = `
+    <span>Brought by <span class="dj-name">${a.dj}</span></span>
+    <span>Played <strong>${formatDate(a.date)}</strong></span>
+    <span>${a.genre}</span>
+  `;
+  document.getElementById('detailOverlay').classList.add('open');
+}
+
+function closeDetail() {
+  document.getElementById('detailOverlay').classList.remove('open');
+}
+
+function setupSearch() {
+  let debounce;
+  document.getElementById('searchBox').addEventListener('input', e => {
+    clearTimeout(debounce);
+    debounce = setTimeout(() => {
+      searchQuery = e.target.value.trim();
+      updateClearButton();
+      renderCurrentView();
+    }, 200);
+  });
+}
+
+function formatDate(d) {
+  return new Date(d + 'T12:00:00').toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDetail(); });
 </script>
 </body>
 </html>
