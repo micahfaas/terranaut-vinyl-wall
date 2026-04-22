@@ -459,7 +459,12 @@ function setupSearch() {
 }
 
 function formatDate(d) {
-  return new Date(d + 'T12:00:00').toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+  if (!d) return '';
+  // Try parsing as-is first, then with T12:00:00 for YYYY-MM-DD
+  let date = new Date(d);
+  if (isNaN(date.getTime())) date = new Date(d + 'T12:00:00');
+  if (isNaN(date.getTime())) return String(d);
+  return date.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
 }
 
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDetail(); });
